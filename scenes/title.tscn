@@ -1,0 +1,99 @@
+[gd_scene load_steps=6 format=3 uid="uid://dd2xoi5kttqqh"]
+
+[ext_resource type="Texture2D" uid="uid://cwh84y21ki5yd" path="res://assets/figs/p1.jpg" id="1_exlkj"]
+[ext_resource type="Texture2D" uid="uid://dkxauaoi3nuhc" path="res://assets/figs/p2.jpg" id="2_3nu6u"]
+[ext_resource type="Script" path="res://scenes/StartGame.gd" id="3_mi4ly"]
+[ext_resource type="Script" path="res://scenes/LoadGame.gd" id="4_oonuq"]
+[ext_resource type="Script" path="res://scenes/ExitGame.gd" id="5_fltff"]
+
+[node name="Title" type="ColorRect"]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="HBoxContainer" type="HBoxContainer" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="p1" type="TextureRect" parent="HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+texture = ExtResource("1_exlkj")
+expand_mode = 3
+
+[node name="Right" type="ColorRect" parent="HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="VBoxContainer" type="VBoxContainer" parent="HBoxContainer/Right"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 3
+
+[node name="RightTopIdle" type="Label" parent="HBoxContainer/Right/VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+size_flags_stretch_ratio = 0.1
+
+[node name="p2" type="TextureRect" parent="HBoxContainer/Right/VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+texture = ExtResource("2_3nu6u")
+stretch_mode = 4
+
+[node name="MenuVBoxContainer" type="VBoxContainer" parent="HBoxContainer/Right/VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="StartGame" type="Button" parent="HBoxContainer/Right/VBoxContainer/MenuVBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_font_sizes/font_size = 64
+text = "开始游戏"
+script = ExtResource("3_mi4ly")
+
+[node name="LoadGame" type="Button" parent="HBoxContainer/Right/VBoxContainer/MenuVBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_font_sizes/font_size = 64
+text = "加载游戏"
+script = ExtResource("4_oonuq")
+
+[node name="Gallery" type="Button" parent="HBoxContainer/Right/VBoxContainer/MenuVBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_font_sizes/font_size = 64
+text = "画廊"
+
+[node name="ExitGame" type="Button" parent="HBoxContainer/Right/VBoxContainer/MenuVBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_font_sizes/font_size = 64
+text = "结束游戏"
+script = ExtResource("5_fltff")
+
+[node name="RightBottomIdle" type="Label" parent="HBoxContainer/Right/VBoxContainer/MenuVBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 6
+size_flags_stretch_ratio = 0.5
+
+[node name="RightIdle" type="ColorRect" parent="HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_stretch_ratio = 0.1
+
+[connection signal="pressed" from="HBoxContainer/Right/VBoxContainer/MenuVBoxContainer/StartGame" to="HBoxContainer/Right/VBoxContainer/MenuVBoxContainer/StartGame" method="_on_pressed"]
+[connection signal="pressed" from="HBoxContainer/Right/VBoxContainer/MenuVBoxContainer/LoadGame" to="HBoxContainer/Right/VBoxContainer/MenuVBoxContainer/LoadGame" method="_on_pressed"]
+[connection signal="pressed" from="HBoxContainer/Right/VBoxContainer/MenuVBoxContainer/ExitGame" to="HBoxContainer/Right/VBoxContainer/MenuVBoxContainer/ExitGame" method="_on_pressed"]

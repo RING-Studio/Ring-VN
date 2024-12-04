@@ -1,0 +1,43 @@
+# Godot 4+ specific ignores
+.godot/
+*.import
+**/*.import
+build/
+# 从python官网下载embedded package解压到这个目录即可，可以自动识别不同版本
+python/**
+!python/.gitkeep
+!python/.gdignore
+
+.vs/
+.vscode/
+.history/
+TestResults/
+snapshot/
+
+### macos ###
+# General
+.DS_Store
+.AppleDouble
+.LSOverride
+
+# Icon must end with two \r
+Icon
+
+# Thumbnails
+._*
+
+# Files that might appear in the root of a volume
+.DocumentRevisions-V100
+.fseventsd
+.Spotlight-V100
+.TemporaryItems
+.Trashes
+.VolumeIcon.icns
+.com.apple.timemachine.donotpresent
+
+# Directories potentially created on remote AFP share
+.AppleDB
+.AppleDesktop
+Network Trash Folder
+Temporary Items
+.apdisk

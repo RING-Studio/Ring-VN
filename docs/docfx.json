@@ -1,0 +1,48 @@
+{
+    "metadata": [
+        {
+            "src": [
+                {
+                    "src": "..",
+                    "files": [
+                        "**/*.csproj"
+                    ]
+                }
+            ],
+            "dest": "api",
+            "filter": "filter.yml"
+        }
+    ],
+    "build": {
+        "content": [
+            {
+                "files": [
+                    "**/*.{md,yml}"
+                ],
+                "exclude": [
+                    "_site/**"
+                ]
+            }
+        ],
+        "resource": [
+            {
+                "files": [
+                    "images/**",
+                    "docs/assets/**",
+                    "assets/**"
+                ]
+            }
+        ],
+        "output": "_site",
+        "template": [
+            "default",
+            "modern"
+        ],
+        "globalMetadata": {
+            "_appName": "Ring Engine",
+            "_appTitle": "Ring Engine",
+            "_enableSearch": true,
+            "pdf": false
+        }
+    }
+}
