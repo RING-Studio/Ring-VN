@@ -44,4 +44,6 @@ public class PathSTD
 
     public static PathSTD operator +(PathSTD a, string b) =>
         From(a.RelativePath + "/" + From(b).RelativePath);
+
+    public static implicit operator PathSTD(string path) => From(path);
 }

@@ -16,12 +16,12 @@ public class StageModule
 
 public class Characters
 {
-    Dictionary<string, Sprite> _Characters;
+    Dictionary<string, Sprite> _Characters = [];
 
     /// <summary>
     /// 角色渲染的前后关系，靠后的角色显示在上层。
     /// </summary>
-    List<string> RenderOrder;
+    List<string> RenderOrder = [];
 
     public Sprite this[string name] => _Characters[name];
 

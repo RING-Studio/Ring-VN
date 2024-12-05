@@ -26,7 +26,7 @@ public interface IRenderable
 public class Sprite : IRenderable, ITweenable
 {
     public Sprite2D _Sprite;
-    public string Name
+    public virtual string Name
     {
         get => _Sprite.Name;
         set => _Sprite.Name = value;
@@ -51,16 +51,17 @@ public class Sprite : IRenderable, ITweenable
             _Sprite.Modulate = modulate;
         }
     }
-    public Texture2D Texture
+    public Texture Texture
     {
-        get => _Sprite.Texture;
+        get => new(_Sprite.Texture);
         set => _Sprite.Texture = value;
     }
 
-    public Sprite(Sprite2D sprite)
-    {
-        _Sprite = sprite;
-    }
+    /// <summary>
+    /// DO NOT USE in production code!!! Only for test purpose.
+    /// </summary>
+    public Sprite() { }
+    public Sprite(Sprite2D sprite) => _Sprite = sprite;
 
     public static implicit operator Sprite2D(Sprite renderable) => renderable._Sprite;
 
@@ -132,10 +133,7 @@ public class Texture
 {
     public Texture2D _Texture;
 
-    public Texture(Texture2D texture)
-    {
-        _Texture = texture;
-    }
+    public Texture(Texture2D texture) => _Texture = texture;
 
     public static implicit operator Texture2D(Texture texture) => texture._Texture;
 }

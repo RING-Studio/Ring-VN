@@ -1,12 +1,12 @@
-using RingEngine.EAL.Animation;
-
 namespace RingEngine.Core.Animation;
+using RingEngine.EAL.Animation;
 
 using System.Collections.Generic;
 using System.Linq;
-using EAL;
 using Godot;
+using RingEngine.EAL.Resource;
 using RingEngine.EAL.SceneTree;
+using Texture = EAL.Resource.Texture;
 
 /// <summary>
 /// 需要全局信息的效果
@@ -19,7 +19,7 @@ public interface ITransition
     /// <param name="runtime"></param>
     /// <param name="newBG"></param>
     /// <returns>若干效果组，直接提交给EffectBuffer即可</returns>
-    public IEnumerable<EffectGroup> Build(VNRuntime runtime, Texture2D newBG);
+    public IEnumerable<EffectGroup> Build(VNRuntime runtime, Texture newBG);
 
     /// <summary>
     /// 获取转场的持续时间
@@ -29,16 +29,16 @@ public interface ITransition
 
 public class DissolveTrans : ITransition
 {
-    public Texture2D mask;
+    public Texture mask;
     public double duration;
 
     public DissolveTrans(Texture2D mask = null, double duration = 2)
     {
-        this.mask = GD.Load<Texture2D>("res://assets/Runtime/black.png");
+        this.mask = UniformLoader.LoadTexture("res://assets/Runtime/black.png");
         this.duration = duration;
     }
 
-    public IEnumerable<EffectGroup> Build(VNRuntime runtime, Texture2D newBG)
+    public IEnumerable<EffectGroup> Build(VNRuntime runtime, Texture newBG)
     {
         var stage = runtime.Stage;
         var group1 = new EffectGroupBuilder()
