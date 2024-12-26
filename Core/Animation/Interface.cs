@@ -1,7 +1,6 @@
-namespace RingEngine.EAL.Animation;
+namespace RingEngine.Core.Animation;
 
 using Godot;
-using RingEngine.EAL.Resource;
 
 /// <summary>
 /// 对单个节点应用的效果，不能访问其它节点，不能删除节点

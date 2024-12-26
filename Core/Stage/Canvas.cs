@@ -1,10 +1,10 @@
-namespace RingEngine.EAL.SceneTree;
+namespace RingEngine.Core.Stage;
 
 using System.Collections.Generic;
 using System.Linq;
 using Godot;
 using RingEngine.Core.Animation;
-using RingEngine.EAL.Resource;
+using RingEngine.Core.General;
 
 /// <summary>
 /// 封装了Stage需要的访问SceneTree的操作。

@@ -1,13 +1,7 @@
-namespace RingEngine.EAL.Resource;
+namespace RingEngine.Core.General;
 
 using Godot;
 using RingEngine.Core.Animation;
-
-public interface IRenderable
-{
-    public float Alpha { get; set; }
-    public Placement Placement { get; set; }
-}
 
 public class AlphaProxy
 {
@@ -66,13 +60,4 @@ public static class Node2DExtensions
 public static class ControlExtensions
 {
     public static PlacementProxy Placement(this Node2D node) => new(node);
-}
-
-public class GDScenePack
-{
-    public PackedScene _PackedScene;
-
-    public GDScenePack(PackedScene packedScene) => _PackedScene = packedScene;
-
-    public static implicit operator PackedScene(GDScenePack scene) => scene._PackedScene;
 }

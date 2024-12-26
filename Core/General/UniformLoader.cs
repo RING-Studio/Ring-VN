@@ -1,7 +1,6 @@
-namespace RingEngine.EAL.Resource;
+namespace RingEngine.Core.General;
 
 using Godot;
-using RingEngine.Core.General;
 
 public static class UniformLoader
 {
@@ -23,7 +22,7 @@ public static class UniformLoader
         }
     }
 
-    public static GDScenePack LoadScene(PathSTD path) => new(Load<PackedScene>(path));
+    public static PackedScene LoadScene(PathSTD path) => Load<PackedScene>(path);
 
     public static void Save(Resource resource, PathSTD path)
     {

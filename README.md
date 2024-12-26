@@ -4,8 +4,6 @@ Ring Engine的AVG part核心组件
 
 可靠、稳定、测试覆盖
 
-隔离引擎操作
-
 ## Architecture
 
 ### Core VN Runtime (Core)
@@ -86,10 +84,6 @@ Ring Engine的AVG part核心组件
 
 UniformLoader：统一资源加载接口，提供各种静态加载方法。
 
-Renderable：Sprite2D包装层，隔离godot类型以及提供qol方法。
-
-AudioPlayer：AudioStreamPlayer包装层，隔离godot类型以及提供qol方法。
-
 #### SceneTreeProxy
 
 场景树代理静态类，维护场景树结构，提供godot类型和ring类型的转换与隔离。
@@ -106,6 +100,6 @@ AssetWrapper：静态类，提供断言方法集合，有丰富的debug信息。
 
 PathSTD：标准文件系统路径，统一Godot和C#的文件路径。
 
-#### Global
+#### RingIO
 
-一个Autoload节点，处理一些全局资源的管理和process方法的托管。
+与主程序的交互界面，RAII管理全局资源以及process方法托管。

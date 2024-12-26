@@ -1,4 +1,4 @@
-namespace RingEngine.EAL.Resource;
+namespace RingEngine.Core.Audio;
 
 using Godot;
 

@@ -1,9 +1,8 @@
 namespace RingEngine.Core.Storage;
 
+using Godot;
 using RingEngine.Core;
 using RingEngine.Core.General;
-using RingEngine.EAL.Resource;
-using RingEngine.EAL.SceneTree;
 
 public class StorageModule
 {
@@ -30,7 +29,7 @@ public class StorageModule
 
 public class Snapshot
 {
-    public GDScenePack GodotSceneTree;
+    public PackedScene GodotSceneTree;
     public string ScriptPath;
     public string Global;
 

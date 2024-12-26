@@ -3,9 +3,8 @@ namespace RingEngine.Core.Animation;
 using System.Collections.Generic;
 using System.Linq;
 using Godot;
-using RingEngine.EAL.Animation;
-using RingEngine.EAL.Resource;
-using RingEngine.EAL.SceneTree;
+using RingEngine.Core.General;
+using RingEngine.Core.Stage;
 
 /// <summary>
 /// 需要全局信息的效果

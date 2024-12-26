@@ -1,3 +1,5 @@
+using RingEngine.Core.General;
+
 namespace RingEngine.Core.Script;
 
 using System;
@@ -8,12 +10,10 @@ using Godot;
 using Python.Runtime;
 using RingEngine.Core.Animation;
 using RingEngine.Core.General;
+using RingEngine.Core.Stage;
 using RingEngine.Core.Storage;
-using RingEngine.EAL.Animation;
-using RingEngine.EAL.Resource;
-using RingEngine.EAL.SceneTree;
 using static RingEngine.Core.General.AssertWrapper;
-using UniformLoader = EAL.Resource.UniformLoader;
+using UniformLoader = UniformLoader;
 
 #nullable enable
 
@@ -122,7 +122,7 @@ public class Branch : IScriptBlock
                 throw new NotImplementedException();
                 break;
             case BranchType.Horizontal:
-                UI.DisplayBranch(Options);
+                runtime.UI.DisplayBranch(Options);
                 break;
             default:
                 throw new UnreachableException();

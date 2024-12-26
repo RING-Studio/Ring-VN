@@ -1,7 +1,6 @@
 namespace RingEngine.Core.Audio;
 
-using RingEngine.EAL.Resource;
-using RingEngine.EAL.SceneTree;
+using RingEngine.Core.General;
 
 public class AudioModule
 {

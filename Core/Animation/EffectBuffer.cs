@@ -2,10 +2,8 @@ namespace RingEngine.Core.Animation;
 
 using System.Collections.Generic;
 using System.Linq;
-using EAL.Animation;
 using Godot;
 using RingEngine.Core.General;
-using RingEngine.EAL.SceneTree;
 using static RingEngine.Core.General.AssertWrapper;
 
 public class EffectGroup

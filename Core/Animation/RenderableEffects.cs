@@ -1,8 +1,7 @@
-namespace RingEngine.EAL.Animation;
+namespace RingEngine.Core.Animation;
 
-using System.Diagnostics;
 using Godot;
-using RingEngine.EAL.Resource;
+using RingEngine.Core.General;
 using static RingEngine.Core.General.AssertWrapper;
 
 public class SetAlpha : IEffect

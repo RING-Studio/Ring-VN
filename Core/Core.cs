@@ -4,7 +4,7 @@ using System;
 using System.Linq;
 using Animation;
 using Audio;
-using RingEngine.EAL.SceneTree;
+using RingEngine.Core.General;
 using Script;
 using Stage;
 using Storage;

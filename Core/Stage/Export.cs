@@ -2,10 +2,9 @@ namespace RingEngine.Core.Stage;
 
 using System.Collections.Generic;
 using System.Linq;
-using EAL.Resource;
 using Godot;
 using RingEngine.Core.Animation;
-using RingEngine.EAL.SceneTree;
+using RingEngine.Core.General;
 using static RingEngine.Core.General.AssertWrapper;
 
 public class StageModule

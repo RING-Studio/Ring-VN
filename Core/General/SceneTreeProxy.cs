@@ -1,7 +1,7 @@
-namespace RingEngine.EAL.SceneTree;
+namespace RingEngine.Core.General;
 
 using Godot;
-using RingEngine.EAL.Resource;
+using RingEngine.Core.Audio;
 using static RingEngine.Core.General.AssertWrapper;
 
 /// <summary>
@@ -50,9 +50,9 @@ public class SceneTreeProxy
         {
             return;
         }
-        var runtimeRoot = (
-            (PackedScene)UniformLoader.LoadScene("res://EAL/SceneTree/VNRuntime.tscn")
-        ).Instantiate();
+        var runtimeRoot = UniformLoader
+            .LoadScene("res://EAL/SceneTree/VNRuntime.tscn")
+            .Instantiate();
         runtimeRoot.Name = RuntimeRootName;
 
         Root.AddChild(runtimeRoot);
@@ -70,17 +70,17 @@ public class SceneTreeProxy
         }
     }
 
-    public static GDScenePack Serialize()
+    public static PackedScene Serialize()
     {
         SetOwner(RuntimeRoot, RuntimeRoot);
         var pack = new PackedScene();
         pack.Pack(RuntimeRoot);
-        return new(pack);
+        return pack;
     }
 
-    public static void Deserialize(GDScenePack pack)
+    public static void Deserialize(PackedScene pack)
     {
-        var runtime = ((PackedScene)pack).Instantiate();
+        var runtime = pack.Instantiate();
         RuntimeRoot.QueueFree();
         Root.RemoveChild(RuntimeRoot);
         Root.AddChild(runtime);

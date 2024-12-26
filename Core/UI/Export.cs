@@ -1,11 +1,11 @@
 namespace RingEngine.Core.UI;
 
 using System.Collections.Generic;
-using EAL.Resource;
+using System.Linq;
 using Godot;
+using Godot.Collections;
 using RingEngine.Core.General;
 using RingEngine.Core.Script;
-using RingEngine.EAL.SceneTree;
 
 public class UIModule
 {
@@ -51,8 +51,14 @@ public class UIModule
         TextBox.VisibleRatio = visibleRatio;
     }
 
-    public static void DisplayBranch(IEnumerable<Branch.BranchOption> options) =>
-        UI.DisplayBranch(options);
+    public void DisplayBranch(IEnumerable<Branch.BranchOption> options)
+    {
+        var branchRoot = SceneTreeProxy.BranchScene.Instantiate<Control>();
+        branchRoot.Name = "Branch";
+        branchRoot.Set("Callback", Callable.From<int, string>(BranchCallBack));
+        branchRoot.Set("Texts", new Array<string>(options.Select((option) => option.Text)));
+        SceneTreeProxy.UIRoot.AddChild(branchRoot);
+    }
 
     public static void BranchCallBack(int index, string text)
     {

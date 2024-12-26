@@ -2,7 +2,6 @@ namespace RingEngine.Core.Script;
 
 using RingEngine.Core.General;
 using RingEngine.Core.Storage;
-using RingEngine.EAL.Resource;
 
 /// <summary>
 /// 脚本模块，脚本对象存储、解析、执行
