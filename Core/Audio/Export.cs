@@ -1,4 +1,4 @@
-namespace RingEngine.Core.Audio.Export;
+namespace RingEngine.Core.Audio;
 
 using RingEngine.EAL.Resource;
 using RingEngine.EAL.SceneTree;

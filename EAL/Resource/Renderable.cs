@@ -2,138 +2,77 @@ namespace RingEngine.EAL.Resource;
 
 using Godot;
 using RingEngine.Core.Animation;
-using RingEngine.EAL.Animation;
 
 public interface IRenderable
 {
-    //TODO: 如果有了Node接口Name应该移过去
-    public string Name { get; set; }
-    public Vector2 Position { get; set; }
-    public Vector2 Scale { get; set; }
     public float Alpha { get; set; }
-    public Placement Placement
-    {
-        // 目前Scale只支持等比缩放，如果有需求则TODO
-        get => new(Position, Scale.X);
-        set
-        {
-            Position = value.Position;
-            Scale = new(value.scale, value.scale);
-        }
-    }
+    public Placement Placement { get; set; }
 }
 
-public class Sprite : IRenderable, ITweenable
+public class AlphaProxy
 {
-    public Sprite2D _Sprite;
-    public virtual string Name
+    CanvasItem _Node;
+
+    public static implicit operator float(AlphaProxy proxy) => proxy._Node.Modulate.A;
+
+    public void Set(float value)
     {
-        get => _Sprite.Name;
-        set => _Sprite.Name = value;
-    }
-    public Vector2 Position
-    {
-        get => _Sprite.Position;
-        set => _Sprite.Position = value;
-    }
-    public Vector2 Scale
-    {
-        get => _Sprite.Scale;
-        set => _Sprite.Scale = value;
-    }
-    public float Alpha
-    {
-        get => _Sprite.Modulate.A;
-        set
-        {
-            var modulate = _Sprite.Modulate;
-            modulate.A = value;
-            _Sprite.Modulate = modulate;
-        }
-    }
-    public Texture Texture
-    {
-        get => new(_Sprite.Texture);
-        set => _Sprite.Texture = value;
+        var modulate = _Node.Modulate;
+        modulate.A = value;
+        _Node.Modulate = modulate;
     }
 
-    /// <summary>
-    /// DO NOT USE in production code!!! Only for test purpose.
-    /// </summary>
-    public Sprite() { }
-    public Sprite(Sprite2D sprite) => _Sprite = sprite;
+    public AlphaProxy(CanvasItem node) => _Node = node;
+}
 
-    public static implicit operator Sprite2D(Sprite renderable) => renderable._Sprite;
+public class PlacementProxy
+{
+    Node2D _Node;
 
+    public static implicit operator Placement(PlacementProxy proxy) =>
+        new(proxy._Node.Position, proxy._Node.Scale.X);
+
+    public void Set(Placement value)
+    {
+        _Node.Position = value.Position;
+        _Node.Scale = new(value.scale, value.scale);
+    }
+
+    public PlacementProxy(Node2D node) => _Node = node;
+}
+
+public static class NodeExtensions
+{
     /// <summary>
     /// 析构时自动释放节点。
     /// </summary>
-    public void Drop()
+    public static void Drop(this Sprite2D node)
     {
-        _Sprite.GetParent()?.RemoveChild(_Sprite);
-        _Sprite.QueueFree();
+        node.GetParent()?.RemoveChild(node);
+        node.QueueFree();
     }
 }
 
-public class Widget : IRenderable, ITweenable
+public static class CanvasItemExtensions
 {
-    public Control _Control;
-    public string Name
-    {
-        get => _Control.Name;
-        set => _Control.Name = value;
-    }
-    public Vector2 Position
-    {
-        get => _Control.Position;
-        set => _Control.Position = value;
-    }
-    public Vector2 Scale
-    {
-        get => _Control.Scale;
-        set => _Control.Scale = value;
-    }
-    public float Alpha
-    {
-        get => _Control.Modulate.A;
-        set
-        {
-            var modulate = _Control.Modulate;
-            modulate.A = value;
-            _Control.Modulate = modulate;
-        }
-    }
-
-    public Widget(Control control)
-    {
-        _Control = control;
-    }
-
-    public static implicit operator Control(Widget renderable) => renderable._Control;
+    public static AlphaProxy Alpha(this CanvasItem node) => new(node);
 }
 
-public class TextBox : Widget
+public static class Node2DExtensions
 {
-    public string Text
-    {
-        get => ((RichTextLabel)_Control).Text;
-        set => ((RichTextLabel)_Control).Text = value;
-    }
-    public float VisibleRatio
-    {
-        get => ((RichTextLabel)_Control).VisibleRatio;
-        set => ((RichTextLabel)_Control).VisibleRatio = value;
-    }
-
-    public TextBox(RichTextLabel control)
-        : base(control) { }
+    public static PlacementProxy Placement(this Node2D node) => new(node);
 }
 
-public class Texture
+public static class ControlExtensions
 {
-    public Texture2D _Texture;
+    public static PlacementProxy Placement(this Node2D node) => new(node);
+}
 
-    public Texture(Texture2D texture) => _Texture = texture;
+public class GDScenePack
+{
+    public PackedScene _PackedScene;
 
-    public static implicit operator Texture2D(Texture texture) => texture._Texture;
+    public GDScenePack(PackedScene packedScene) => _PackedScene = packedScene;
+
+    public static implicit operator PackedScene(GDScenePack scene) => scene._PackedScene;
 }

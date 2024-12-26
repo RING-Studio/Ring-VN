@@ -1,12 +1,11 @@
 namespace RingEngine.Core.Animation;
-using RingEngine.EAL.Animation;
 
 using System.Collections.Generic;
 using System.Linq;
 using Godot;
+using RingEngine.EAL.Animation;
 using RingEngine.EAL.Resource;
 using RingEngine.EAL.SceneTree;
-using Texture = EAL.Resource.Texture;
 
 /// <summary>
 /// 需要全局信息的效果
@@ -19,7 +18,7 @@ public interface ITransition
     /// <param name="runtime"></param>
     /// <param name="newBG"></param>
     /// <returns>若干效果组，直接提交给EffectBuffer即可</returns>
-    public IEnumerable<EffectGroup> Build(VNRuntime runtime, Texture newBG);
+    public IEnumerable<EffectGroup> Build(VNRuntime runtime, Texture2D newBG);
 
     /// <summary>
     /// 获取转场的持续时间
@@ -29,16 +28,16 @@ public interface ITransition
 
 public class DissolveTrans : ITransition
 {
-    public Texture mask;
+    public Texture2D mask;
     public double duration;
 
     public DissolveTrans(Texture2D mask = null, double duration = 2)
     {
-        this.mask = UniformLoader.LoadTexture("res://assets/Runtime/black.png");
+        this.mask = UniformLoader.Load<Texture2D>("res://assets/Runtime/black.png");
         this.duration = duration;
     }
 
-    public IEnumerable<EffectGroup> Build(VNRuntime runtime, Texture newBG)
+    public IEnumerable<EffectGroup> Build(VNRuntime runtime, Texture2D newBG)
     {
         var stage = runtime.Stage;
         var group1 = new EffectGroupBuilder()
@@ -47,7 +46,7 @@ public class DissolveTrans : ITransition
                 {
                     stage.Mask?.Drop();
                     stage.Mask = Canvas.AddMask("Mask", mask, Placement.BG);
-                    stage.Mask.Alpha = 0;
+                    stage.Mask.Alpha().Set(0);
                 })
             )
             .Add(OpacityEffect.Dissolve(duration / 2))
@@ -96,7 +95,7 @@ public class DissolveTrans : ITransition
 //        this.smooth = (float)smooth;
 //    }
 
-//    public IEnumerable<EffectGroup> Build(VNRuntime runtime, Texture2D newBG)
+//    public IEnumerable<EffectGroup> Build(VNRuntime runtime, Texture2D2D newBG)
 //    {
 //        if (!maskPath.StartsWith("res://"))
 //        {
@@ -106,8 +105,8 @@ public class DissolveTrans : ITransition
 //        {
 //            controlPath = runtime.script.ToResourcePath(controlPath);
 //        }
-//        var mask = GD.Load<Texture2D>(maskPath);
-//        var control = GD.Load<Texture2D>(controlPath);
+//        var mask = GD.Load<Texture2D2D>(maskPath);
+//        var control = GD.Load<Texture2D2D>(controlPath);
 //        var canvas = runtime.canvas;
 //        var group1 = new EffectGroupBuilder()
 //            .Add(
@@ -150,7 +149,7 @@ public class DissolveTrans : ITransition
 //            .Add(
 //                canvas.Mask,
 //                new Chain(
-//                    new LambdaEffect(() => canvas.BG.Texture = canvas.Stretch(newBG)),
+//                    new LambdaEffect(() => canvas.BG.Texture2D = canvas.Stretch(newBG)),
 //                    new LambdaEffect(
 //                        (node, tween) =>
 //                            tween.TweenMethod(

@@ -1,10 +1,11 @@
 import clr
 clr.AddReference("RingEngine")
 
-from RingEngine.Runtime.AVGRuntime import *
-from RingEngine.Runtime.AVGRuntime.Effect import *
-from RingEngine.Runtime.AVGRuntime.Script import *
-from RingEngine.Runtime.Storage import *
+from RingEngine.Core import *
+from RingEngine.Core.Animation import *
+from RingEngine.Core.Script import *
+from RingEngine.Core.Storage import *
+from RingEngine.EAL.Animation import *
 
 # Placements
 farleft = Placement(0.0, 300.0, 0.5)
@@ -18,10 +19,10 @@ nearmiddle = Placement(450.0, 300.0, 1.0)
 nearright = Placement(900.0, 300.0, 1.0)
 
 # Effects
-transparent = SetAlpha(0)
-opaque = SetAlpha(1)
-dissolve = Dissolve()
-fade = Fade()
+transparent = SetAlpha.Transparent
+opaque = SetAlpha.Opaque
+dissolve = OpacityEffect.Dissolve(1.0)
+fade = OpacityEffect.Fade(1.0)
 
 # Transition
 dissolveTrans = DissolveTrans()

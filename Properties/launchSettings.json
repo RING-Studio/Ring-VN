@@ -1,0 +1,14 @@
+{
+  "profiles": {
+    "RingEngine": {
+      "commandName": "Project"
+    },
+    "Godot": {
+      "commandName": "Executable",
+      "executablePath": "D:\\software\\Scoop\\apps\\godot-mono\\current\\godot-mono.exe",
+      "commandLineArgs": "--path, --verbose",
+      "workingDirectory": ".",
+      "nativeDebugging": true
+    }
+  }
+}

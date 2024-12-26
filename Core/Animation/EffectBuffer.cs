@@ -4,15 +4,16 @@ using System.Collections.Generic;
 using System.Linq;
 using EAL.Animation;
 using Godot;
+using RingEngine.Core.General;
 using RingEngine.EAL.SceneTree;
 using static RingEngine.Core.General.AssertWrapper;
 
 public class EffectGroup
 {
     public List<IEffect> Effects;
-    public ITweenable Target = null;
+    public Node Target = null;
 
-    public EffectGroup(List<IEffect> effects, ITweenable target)
+    public EffectGroup(List<IEffect> effects, Node target)
     {
         Effects = effects;
         Target = target;
@@ -24,8 +25,7 @@ public class EffectGroup
 /// </summary>
 public class EffectGroupBuilder
 {
-    public List<IEffect> Effects;
-    public ITweenable Target;
+    public List<IEffect> Effects = [];
 
     public EffectGroupBuilder Add(IEffect effect)
     {
@@ -36,7 +36,7 @@ public class EffectGroupBuilder
     /// <summary>
     /// 构建效果组并绑定作用对象，如果不指定对象则在全局Tween上执行
     /// </summary>
-    public EffectGroup Build(ITweenable target = null) => new(Effects, target);
+    public EffectGroup Build(Node target = null) => new(Effects, target);
 }
 
 public class EffectBuffer
@@ -51,15 +51,12 @@ public class EffectBuffer
     // 等待队列
     List<EffectGroup> buffer = [];
 
-    public void Append(EffectGroup group)
-    {
-        buffer.Add(group);
-    }
+    public bool HasPendingAnimation =>
+        IsRunning || RunningGroup.Effects.Count > 0 || buffer.Count > 0;
 
-    public void Append(IEnumerable<EffectGroup> groups)
-    {
-        buffer.AddRange(groups);
-    }
+    public void Append(EffectGroup group) => buffer.Add(group);
+
+    public void Append(IEnumerable<EffectGroup> groups) => buffer.AddRange(groups);
 
     // TODO: Interrupt的时候是打断所有排队的动画还是只打断当前正在运行的动画？
     public void Interrupt()
@@ -90,8 +87,8 @@ public class EffectBuffer
         // 在这个位置上节点的动画应当已经执行完成（或被打断），多个buffer争用节点由caller解决
         var tween =
             RunningGroup.Target == null
-                ? SceneTreeProxy.Global.CreateTween()
-                : (RunningGroup.Target as Node).CreateTween();
+                ? SceneTreeProxy.RingIO.CreateTween()
+                : RunningGroup.Target.CreateTween();
         effect.Apply(tween);
         RunningEffect = tween;
         return true;

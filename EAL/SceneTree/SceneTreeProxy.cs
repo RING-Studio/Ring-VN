@@ -12,11 +12,11 @@ public class SceneTreeProxy
     static SceneTree SceneTree => Engine.GetMainLoop() as SceneTree;
     static Node Root => SceneTree.Root;
 
-    public static Global Global => Root.GetNode<Global>("Global");
+    public static RingIO RingIO => Root.GetNode<RingIO>("RingIO");
 
     const string RuntimeRootName = "VNRuntime";
 
-    static Node RuntimeRoot => Root.GetNode<Node>(RuntimeRootName);
+    public static Node RuntimeRoot => Root.GetNode<Node>(RuntimeRootName);
 
     // Stage Part
     public static Node2D StageRoot => RuntimeRoot.GetNode<Node2D>("Stage");
@@ -25,17 +25,14 @@ public class SceneTreeProxy
     public static Node2D Masks => StageRoot.GetNode<Node2D>("Masks");
 
     // UI Part
-    const string UIScenePath = "res://scenes/UI.tscn";
     public static Control UIRoot => RuntimeRoot.GetNode<Control>("UI");
-    public static Widget ChapterNameBack => new(UIRoot.GetNode<TextureRect>("./ChapterNameBack"));
-    public static TextBox ChapterNameBox =>
-        new(UIRoot.GetNode<RichTextLabel>("./ChapterNameBack/ChapterName"));
-    public static TextBox TextBox =>
-        new(UIRoot.GetNode<RichTextLabel>("./TextBoxBack/MarginContainer/MarginContainer/TextBox"));
-    public static TextBox CharacterNameBox =>
-        new(
-            UIRoot.GetNode<RichTextLabel>("./TextBoxBack/MarginContainer/MarginContainer2/TextBox")
-        );
+    public static TextureRect ChapterNameBack => UIRoot.GetNode<TextureRect>("./ChapterNameBack");
+    public static RichTextLabel ChapterNameBox =>
+        UIRoot.GetNode<RichTextLabel>("./ChapterNameBack/ChapterName");
+    public static RichTextLabel TextBox =>
+        UIRoot.GetNode<RichTextLabel>("./TextBoxBack/MarginContainer/MarginContainer/TextBox");
+    public static RichTextLabel CharacterNameBox =>
+        UIRoot.GetNode<RichTextLabel>("./TextBoxBack/MarginContainer/MarginContainer2/TextBox");
 
     // Branch Part
     const string BranchPath = "res://scenes/Branch.tscn";
@@ -53,26 +50,12 @@ public class SceneTreeProxy
         {
             return;
         }
-        var runtimeRoot = new Node() { Name = RuntimeRootName, };
-        Root.AddChild(runtimeRoot);
+        var runtimeRoot = (
+            (PackedScene)UniformLoader.LoadScene("res://EAL/SceneTree/VNRuntime.tscn")
+        ).Instantiate();
+        runtimeRoot.Name = RuntimeRootName;
 
-        var stageRoot = new Node2D() { Name = "Stage", };
-        runtimeRoot.AddChild(stageRoot);
-        var backgrounds = new Node2D() { Name = "Backgrounds", };
-        stageRoot.AddChild(backgrounds);
-        var characters = new Node2D() { Name = "Characters", };
-        stageRoot.AddChild(characters);
-        var masks = new Node2D() { Name = "Masks", };
-        stageRoot.AddChild(masks);
-        var UIRoot = UniformLoader.Load<Control>(UIScenePath);
-        UIRoot.Name = "UI";
-        runtimeRoot.AddChild(UIRoot);
-        var BGM = new AudioStreamPlayer() { Name = "BGM", };
-        runtimeRoot.AddChild(BGM);
-        var SE = new AudioStreamPlayer() { Name = "SE", };
-        runtimeRoot.AddChild(SE);
-        var voice = new AudioStreamPlayer() { Name = "Voice", };
-        runtimeRoot.AddChild(voice);
+        Root.AddChild(runtimeRoot);
     }
 
     internal static void SetOwner(Node owner, Node root)
@@ -87,17 +70,17 @@ public class SceneTreeProxy
         }
     }
 
-    public static PackedScene Serialize()
+    public static GDScenePack Serialize()
     {
         SetOwner(RuntimeRoot, RuntimeRoot);
         var pack = new PackedScene();
         pack.Pack(RuntimeRoot);
-        return pack;
+        return new(pack);
     }
 
-    public static void Deserialize(PackedScene pack)
+    public static void Deserialize(GDScenePack pack)
     {
-        var runtime = pack.Instantiate();
+        var runtime = ((PackedScene)pack).Instantiate();
         RuntimeRoot.QueueFree();
         Root.RemoveChild(RuntimeRoot);
         Root.AddChild(runtime);

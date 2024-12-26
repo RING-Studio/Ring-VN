@@ -5,33 +5,25 @@ changeBG<img src="assets/bg1.png" alt="bg1" style="zoom:25%;" />with dissolve
 ？？？："那么，世界回应了少女，实现了她的心愿？"
 
 ```python
-runtime.Office()
+#runtime.Office()
 ```
 
 changeBG <img src="assets/transparent.png" alt="transparent" style="zoom:25%;" />
 
 ```python
-import json
-breakout = json.loads(runtime.Global["BreakoutData"])
-breakout["player_consumables"]["strange calculator"] = {"rest_times":5, "transformed":False}
-breakout["player_consumables"]["old model"] = {"rest_times":3, "transformed":False}
-breakout["selected_skill"] = "blood bullet"
-#breakout["current_level"] = "test level 0" # 不传这个则使用场景树上的未打包成tscn的关卡
-breakout["player_max_health"] = 16
-breakout["player_init_ammo"] = 6
-runtime.Global["BreakoutData"] = json.dumps(breakout)
+
 ```
 
 ？？："不完全是这样..."
 
-```
-runtime.Office()
+```python
+#runtime.Office()
 ```
 
 ？？："世界以少女的愿望为契机，发生了些许变化，仅此而已。"
 
 ```python
-runtime.InitMiniGame("Breakout")
+#runtime.InitMiniGame("Breakout")
 ```
 
 **label1**

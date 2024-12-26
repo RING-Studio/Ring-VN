@@ -1,20 +1,19 @@
-namespace RingEngine.Core.UI.Export;
+namespace RingEngine.Core.UI;
 
 using System.Collections.Generic;
 using EAL.Resource;
+using Godot;
 using RingEngine.Core.General;
 using RingEngine.Core.Script;
 using RingEngine.EAL.SceneTree;
 
 public class UIModule
 {
-    public int TextSpeed { get; set; }
-
-    public Widget Root => new(SceneTreeProxy.UIRoot);
-    public TextBox TextBox => SceneTreeProxy.TextBox;
-    public TextBox CharacterNameBox => SceneTreeProxy.CharacterNameBox;
-    public TextBox ChapterNameBox => SceneTreeProxy.ChapterNameBox;
-    public Widget ChapterNameBack => SceneTreeProxy.ChapterNameBack;
+    public Control Root => SceneTreeProxy.UIRoot;
+    public RichTextLabel TextBox => SceneTreeProxy.TextBox;
+    public RichTextLabel CharacterNameBox => SceneTreeProxy.CharacterNameBox;
+    public RichTextLabel ChapterNameBox => SceneTreeProxy.ChapterNameBox;
+    public TextureRect ChapterNameBack => SceneTreeProxy.ChapterNameBack;
     public string CharacterName
     {
         get => CharacterNameBox.Text.Trim(['【', '】']);
@@ -37,11 +36,9 @@ public class UIModule
     }
     public float ChapterNameAlpha
     {
-        get => ChapterNameBack.Alpha;
-        set => ChapterNameBack.Alpha = value;
+        get => ChapterNameBack.Alpha();
+        set => ChapterNameBack.Alpha().Set(value);
     }
-
-    public double DurationForText(string text) => text.Length / TextSpeed;
 
     public void CharacterSay(string name, string content)
     {

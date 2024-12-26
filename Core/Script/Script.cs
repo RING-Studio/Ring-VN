@@ -1,12 +1,16 @@
 namespace RingEngine.Core.Script;
+
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using Godot;
 using Python.Runtime;
 using RingEngine.Core.Animation;
 using RingEngine.Core.General;
+using RingEngine.Core.Storage;
 using RingEngine.EAL.Animation;
+using RingEngine.EAL.Resource;
 using RingEngine.EAL.SceneTree;
 using static RingEngine.Core.General.AssertWrapper;
 using UniformLoader = EAL.Resource.UniformLoader;
@@ -173,7 +177,7 @@ public class Show : IScriptBlock
 
     public override void Execute(VNRuntime runtime)
     {
-        var texture = UniformLoader.LoadTexture(runtime.Script.script.ToPathSTD(ImgPath));
+        var texture = UniformLoader.Load<Texture2D>(runtime.Script.script.ToPathSTD(ImgPath));
         var charas = runtime.Stage.Characters;
         var interpreter = runtime.Script.interpreter;
         var effects = new EffectGroupBuilder();
@@ -255,13 +259,16 @@ public class ChangeBG : IScriptBlock
     public override void Execute(VNRuntime runtime)
     {
         var stage = runtime.Stage;
-        var texture = UniformLoader.LoadTexture(runtime.Script.script.ToPathSTD(ImgPath));
+        var texture = UniformLoader.Load<Texture2D>(runtime.Script.script.ToPathSTD(ImgPath));
         var effects = new EffectGroupBuilder();
         effects.Add(
             new LambdaEffect(() =>
             {
                 var newBG = Canvas.AddBG(texture, Placement.BG);
-                newBG.Alpha = 0;
+                if (Effect != null)
+                {
+                    newBG.Alpha().Set(0);
+                }
                 var oldBG = stage.Background;
                 stage.Background = newBG;
                 stage.OldBackground = oldBG;
@@ -271,7 +278,7 @@ public class ChangeBG : IScriptBlock
         if (Effect != null)
         {
             IEffect instance = runtime.Script.interpreter.Eval(Effect);
-            effects.Add(instance.Bind(stage.Background));
+            effects.Add(instance.Bind(() => stage.Background));
         }
         effects.Add(new LambdaEffect(() => stage.OldBackground.Drop()));
         runtime.Animation.mainBuffer.Append(effects.Build());
@@ -295,7 +302,7 @@ public class ChangeScene : IScriptBlock
     public override void Execute(VNRuntime runtime)
     {
         var canvas = runtime.Stage;
-        var texture = UniformLoader.LoadTexture(runtime.Script.script.ToPathSTD(BGPath));
+        var texture = UniformLoader.Load<Texture2D>(runtime.Script.script.ToPathSTD(BGPath));
         var effects = new EffectGroupBuilder();
         if (Effect != null)
         {
@@ -370,13 +377,19 @@ public class Say : IScriptBlock
     {
         var UI = runtime.UI;
         var effects = new EffectGroupBuilder();
-        effects.Add(LambdaEffect.From(() => UI.CharacterSay(Name, Content)));
+        effects.Add(
+            LambdaEffect.From(() =>
+            {
+                UI.TextBox.VisibleRatio = 0;
+                UI.CharacterSay(Name, Content);
+            })
+        );
         effects.Add(
             new MethodInterpolation<float>(
                 UI.TextBoxVisibleRatio,
                 0,
                 1,
-                UI.DurationForText(Content)
+                Content.Length / runtime.Storage.Config.TextSpeed
             )
         );
         runtime.Animation.mainBuffer.Append(effects.Build());

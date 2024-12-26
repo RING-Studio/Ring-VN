@@ -3,18 +3,16 @@ namespace RingEngine.EAL.Animation;
 using Godot;
 using RingEngine.EAL.Resource;
 
-public interface ITweenable { }
-
 /// <summary>
 /// 对单个节点应用的效果，不能访问其它节点，不能删除节点
 /// </summary>
 public abstract class IEffect
 {
-    public delegate ITweenable EvaluateTargetFunc();
+    public delegate Node EvaluateTargetFunc();
 
     EvaluateTargetFunc EvaluateTarget = null;
-    ITweenable _Target = null;
-    public ITweenable Target
+    Node _Target = null;
+    public Node Target
     {
         get
         {
@@ -33,7 +31,7 @@ public abstract class IEffect
     /// </summary>
     public abstract double GetDuration();
 
-    public IEffect Bind(ITweenable target)
+    public IEffect Bind(Node target)
     {
         _Target = target;
         return this;

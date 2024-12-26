@@ -23,10 +23,7 @@ public static class UniformLoader
         }
     }
 
-    public static T Load<T>(string path)
-        where T : GodotObject => Load<T>(PathSTD.From(path));
-
-    public static Texture LoadTexture(PathSTD path) => new(Load<Texture2D>(path));
+    public static GDScenePack LoadScene(PathSTD path) => new(Load<PackedScene>(path));
 
     public static void Save(Resource resource, PathSTD path)
     {
@@ -49,8 +46,6 @@ public static class UniformLoader
         }
         return file.GetAsText();
     }
-
-    public static string LoadText(string path) => LoadText(PathSTD.From(path));
 
     public static void SaveText(string content, PathSTD path)
     {

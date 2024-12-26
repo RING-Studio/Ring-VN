@@ -1,5 +1,7 @@
 namespace RingEngine.EAL.SceneTree;
 
+using System.Collections.Generic;
+using System.Linq;
 using Godot;
 using RingEngine.Core.Animation;
 using RingEngine.EAL.Resource;
@@ -11,7 +13,14 @@ public static class Canvas
 {
     static uint BackgroundCounter = 0;
 
-    public static Sprite AddBG(Texture2D texture, Placement placement)
+    public static IEnumerable<Sprite2D> Backgrounds =>
+        SceneTreeProxy.Backgrounds.GetChildren().Select(x => x as Sprite2D);
+    public static IEnumerable<Sprite2D> Characters =>
+        SceneTreeProxy.Characters.GetChildren().Select(x => x as Sprite2D);
+    public static IEnumerable<Sprite2D> Masks =>
+        SceneTreeProxy.Masks.GetChildren().Select(x => x as Sprite2D);
+
+    public static Sprite2D AddBG(Texture2D texture, Placement placement)
     {
         var bg = new Sprite2D()
         {
@@ -19,12 +28,13 @@ public static class Canvas
             Texture = texture,
             Position = placement.Position,
             Scale = new Vector2(placement.scale, placement.scale),
+            Centered = false,
         };
         SceneTreeProxy.Backgrounds.AddChild(bg);
-        return new Sprite(bg);
+        return bg;
     }
 
-    public static Sprite AddCharacter(string name, Texture2D texture, Placement placement)
+    public static Sprite2D AddCharacter(string name, Texture2D texture, Placement placement)
     {
         var character = new Sprite2D()
         {
@@ -32,12 +42,13 @@ public static class Canvas
             Texture = texture,
             Position = placement.Position,
             Scale = new Vector2(placement.scale, placement.scale),
+            Centered = false,
         };
         SceneTreeProxy.Characters.AddChild(character);
-        return new Sprite(character);
+        return character;
     }
 
-    public static Sprite AddMask(string name, Texture2D texture, Placement placement)
+    public static Sprite2D AddMask(string name, Texture2D texture, Placement placement)
     {
         var mask = new Sprite2D()
         {
@@ -45,8 +56,9 @@ public static class Canvas
             Texture = texture,
             Position = placement.Position,
             Scale = new Vector2(placement.scale, placement.scale),
+            Centered = false
         };
         SceneTreeProxy.Masks.AddChild(mask);
-        return new Sprite(mask);
+        return mask;
     }
 }

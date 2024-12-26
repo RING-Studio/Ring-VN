@@ -13,16 +13,6 @@ public class StorageEngine
     public int PC { get; set; }
 
     /// <summary>
-    /// 当前是否有脚本语句在执行
-    /// </summary>
-    public bool IsExecuting { get; set; }
-
-    /// <summary>
-    /// 上一个选择支选择的选项ID
-    /// </summary>
-    public int LastChosenOptionId { get; set; }
-
-    /// <summary>
     /// 其它数据，为了使python可调用需要限制类型
     /// </summary>
     public Dictionary<string, string> Data = [];

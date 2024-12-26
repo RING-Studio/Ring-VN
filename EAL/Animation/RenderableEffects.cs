@@ -1,7 +1,9 @@
 namespace RingEngine.EAL.Animation;
 
+using System.Diagnostics;
 using Godot;
 using RingEngine.EAL.Resource;
+using static RingEngine.Core.General.AssertWrapper;
 
 public class SetAlpha : IEffect
 {
@@ -17,7 +19,7 @@ public class SetAlpha : IEffect
 
     public override void Apply(Tween tween)
     {
-        tween.TweenCallback(Callable.From(() => (Target as IRenderable).Alpha = Alpha));
+        tween.TweenCallback(Callable.From(() => (Target as CanvasItem).Alpha().Set(Alpha)));
     }
 
     public override double GetDuration() => 0;
@@ -40,8 +42,12 @@ public class OpacityEffect : IEffect
 
     public override void Apply(Tween tween)
     {
-        tween.TweenProperty(Target as Sprite2D, "modulate:a", EndAlpha, Duration);
+        var endModulate = (Target as CanvasItem).Modulate;
+        endModulate.A = EndAlpha;
+        tween.TweenProperty(Target, "modulate", endModulate, Duration);
     }
 
     public override double GetDuration() => Duration;
+
+    public override string ToString() => $"OpacityEffect on {Target.Name}";
 }
