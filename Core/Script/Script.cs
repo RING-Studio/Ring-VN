@@ -180,9 +180,11 @@ public class Show : IScriptBlock
 
         effects.Add(() =>
         {
+            var has_old = false;
             // 同名图片改名为_old
             if (charas.Has(ImgName))
             {
+                has_old = true;
                 charas.Rename(ImgName, ImgName + "_old");
             }
             // 添加新的图片
@@ -191,6 +193,13 @@ public class Show : IScriptBlock
             if (Effect != null)
             {
                 img.Alpha().Set(0);
+            }
+            // TODO:找时间解决这个workaround
+            if (has_old && Effect != null)
+            {
+                runtime.Animation.AddTempEffect(
+                    OpacityEffect.Fade().Bind(() => charas[ImgName + "_old"])
+                );
             }
         });
 

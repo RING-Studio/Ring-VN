@@ -22,7 +22,8 @@ public abstract class IEffect
     }
 
     /// <summary>
-    /// 对节点应用当前效果
+    /// <para>对节点应用当前效果</para>
+    /// 为防止并行时出错，每个Apply中只能调用一次Tween的方法
     /// </summary>
     public abstract void Apply(Tween tween);
 

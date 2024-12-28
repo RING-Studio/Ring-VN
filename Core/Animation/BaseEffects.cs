@@ -1,6 +1,7 @@
 namespace RingEngine.Core.Animation;
 
 using System;
+using System.Linq;
 using Godot;
 
 public class LambdaEffect : IEffect
@@ -84,4 +85,30 @@ public class Delay : IEffect
     }
 
     public override double GetDuration() => Duration;
+}
+
+public class ParallelEffect : IEffect
+{
+    public IEffect[] Effects;
+    public ParallelEffect(params IEffect[] effects)
+    {
+        Effects = effects;
+    }
+
+    public static ParallelEffect From(params IEffect[] effects) => new(effects);
+
+    public override void Apply(Tween tween)
+    {
+        tween.SetParallel();
+        var first_effect = Effects[0];
+        first_effect.Apply(tween);
+        // 假设每个Apply中只有一个Tween方法
+        tween.SetParallel();
+        foreach (var effect in Effects[1..])
+        {
+            effect.Apply(tween);
+        }
+        tween.SetParallel(false);
+    }
+    public override double GetDuration() => Effects.Select(effect => effect.GetDuration()).Max();
 }

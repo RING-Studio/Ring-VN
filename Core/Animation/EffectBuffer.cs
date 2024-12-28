@@ -9,12 +9,15 @@ using static RingEngine.Core.General.AssertWrapper;
 public class EffectGroup
 {
     public List<IEffect> Effects;
-    public Node Target = null;
+    /// <summary>
+    /// Tween绑定对象，如果为null则绑定在RingIO上
+    /// </summary>
+    public Node Driver = null;
 
     public EffectGroup(List<IEffect> effects, Node target)
     {
         Effects = effects;
-        Target = target;
+        Driver = target;
     }
 }
 
@@ -90,9 +93,9 @@ public class EffectBuffer
         RunningGroup.Effects.RemoveAt(0);
         // 在这个位置上节点的动画应当已经执行完成（或被打断），多个buffer争用节点由caller解决
         var tween =
-            RunningGroup.Target == null
+            RunningGroup.Driver == null
                 ? SceneTreeProxy.RingIO.CreateTween()
-                : RunningGroup.Target.CreateTween();
+                : RunningGroup.Driver.CreateTween();
         effect.Apply(tween);
         RunningEffect = tween;
         return true;
