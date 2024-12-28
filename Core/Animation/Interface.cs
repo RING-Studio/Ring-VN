@@ -1,6 +1,7 @@
 namespace RingEngine.Core.Animation;
 
 using Godot;
+using RingEngine.Core.General;
 
 /// <summary>
 /// 对单个节点应用的效果，不能访问其它节点，不能删除节点
@@ -9,8 +10,8 @@ public abstract class IEffect
 {
     public delegate Node EvaluateTargetFunc();
 
-    EvaluateTargetFunc EvaluateTarget = null;
-    Node _Target = null;
+    protected EvaluateTargetFunc EvaluateTarget = null;
+    protected Node _Target = null;
     public Node Target
     {
         get
@@ -35,13 +36,31 @@ public abstract class IEffect
     /// </summary>
     public IEffect Bind(Node target)
     {
-        _Target = target;
-        return this;
+        // Pythonnet的全局变量会被重复调用，导致Target被继承，COW防止共享引用
+        var copy = Clone();
+        copy._Target = target;
+        return copy;
     }
 
     public IEffect Bind(EvaluateTargetFunc evaluateTarget)
     {
-        EvaluateTarget = evaluateTarget;
-        return this;
+        var copy = Clone();
+        copy.EvaluateTarget = evaluateTarget;
+        return copy;
+    }
+
+    public IEffect Clone()
+    {
+        var clone = (IEffect)MemberwiseClone();
+        AssertWrapper.Assert(clone != this);
+        clone._Target = null;
+        clone.EvaluateTarget = null;
+        return clone;
+    }
+
+    public void ClearTarget()
+    {
+        _Target = null;
+        EvaluateTarget = null;
     }
 }

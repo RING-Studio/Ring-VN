@@ -8,9 +8,11 @@ show<img src="assets/立绘1-惊讶.png" alt="立绘1-惊讶" style="zoom:10%;" 
 
 
 
-show<img src="assets/立绘1-叹气.png" alt="立绘1-叹气" style="zoom:10%;" />as royu at nearleft with dissolve
+
 
 ？？："不完全是这样..."
+
+show<img src="assets/立绘1-叹气.png" alt="立绘1-叹气" style="zoom:10%;" />as royu at nearleft with dissolve
 
 ？？："世界以少女的愿望为契机，发生了些许变化，仅此而已。"
 

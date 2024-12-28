@@ -188,20 +188,23 @@ public class Show : IScriptBlock
             // 添加新的图片
             var img = Canvas.AddCharacter(ImgName, texture, interpreter.Eval<Placement>(Placement));
             charas.Add(ImgName, img);
+            if (Effect != null)
+            {
+                img.Alpha().Set(0);
+            }
         });
 
         if (Effect != null)
         {
             // 应用自定义效果
             IEffect instance = interpreter.Eval(Effect);
-            effects.Add(SetAlpha.Transparent.Bind(() => charas[ImgName]));
             effects.Add(instance.Bind(() => charas[ImgName]));
         }
 
         effects.Add(() =>
         {
             // 释放同名图片
-            if (charas.Has(ImgName))
+            if (charas.Has(ImgName + "_old"))
             {
                 charas.Remove(ImgName + "_old").Drop();
             }

@@ -2,7 +2,6 @@ namespace RingEngine.Core.Animation;
 
 using Godot;
 using RingEngine.Core.General;
-using static RingEngine.Core.General.AssertWrapper;
 
 public class SetAlpha : IEffect
 {
@@ -48,5 +47,6 @@ public class OpacityEffect : IEffect
 
     public override double GetDuration() => Duration;
 
-    public override string ToString() => $"OpacityEffect on {Target.Name}";
+    public override string ToString() =>
+        $"{(EndAlpha == 1.0 ? "DissolveEffect" : EndAlpha == 0.0 ? "FadeEffect" : "OpacityEffect")} on {Target.Name}";
 }
