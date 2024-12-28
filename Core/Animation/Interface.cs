@@ -30,6 +30,9 @@ public abstract class IEffect
     /// </summary>
     public abstract double GetDuration();
 
+    /// <summary>
+    /// 仅用于绑定到Runtime的静态节点，涉及Removable节点都应该使用Bind(EvaluateTargetFunc)
+    /// </summary>
     public IEffect Bind(Node target)
     {
         _Target = target;

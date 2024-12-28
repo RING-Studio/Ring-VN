@@ -1,0 +1,22 @@
+[gd_scene load_steps=2 format=3 uid="uid://c0oq7hr1vhclk"]
+
+[ext_resource type="PackedScene" uid="uid://dgbqw5xywsnn" path="res://scenes/UI.tscn" id="1_ip7lf"]
+
+[node name="VNRuntime" type="Node2D"]
+
+[node name="Stage" type="Node2D" parent="."]
+
+[node name="Backgrounds" type="Node2D" parent="Stage"]
+
+[node name="Characters" type="Node2D" parent="Stage"]
+
+[node name="Masks" type="Node2D" parent="Stage"]
+
+[node name="UI" parent="." instance=ExtResource("1_ip7lf")]
+z_index = 1
+
+[node name="BGM" type="AudioStreamPlayer" parent="."]
+
+[node name="SE" type="AudioStreamPlayer" parent="."]
+
+[node name="Voice" type="AudioStreamPlayer" parent="."]

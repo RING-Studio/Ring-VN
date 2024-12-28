@@ -3,12 +3,12 @@ namespace RingEngine.Core.Animation;
 using System;
 using Godot;
 
-// 用于参数类型
-public delegate void EffectFunc(Tween tween);
-public delegate void CallBack();
-
 public class LambdaEffect : IEffect
 {
+    // 用于参数类型
+    public delegate void EffectFunc(Tween tween);
+    public delegate void CallBack();
+
     EffectFunc Func;
     double Duration;
 

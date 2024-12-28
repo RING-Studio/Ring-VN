@@ -25,6 +25,12 @@ public class EffectGroupBuilder
 {
     public List<IEffect> Effects = [];
 
+    public EffectGroupBuilder Add(LambdaEffect.CallBack effect)
+    {
+        Effects.Add(new LambdaEffect(effect));
+        return this;
+    }
+
     public EffectGroupBuilder Add(IEffect effect)
     {
         Effects.Add(effect);

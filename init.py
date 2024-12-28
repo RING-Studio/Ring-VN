@@ -5,7 +5,6 @@ from RingEngine.Core import *
 from RingEngine.Core.Animation import *
 from RingEngine.Core.Script import *
 from RingEngine.Core.Storage import *
-from RingEngine.EAL.Animation import *
 
 # Placements
 farleft = Placement(0.0, 300.0, 0.5)

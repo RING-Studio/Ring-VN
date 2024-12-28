@@ -178,23 +178,18 @@ public class Show : IScriptBlock
         var interpreter = runtime.Script.interpreter;
         var effects = new EffectGroupBuilder();
 
-        if (charas.Has(ImgName))
+        effects.Add(() =>
         {
             // 同名图片改名为_old
-            effects.Add(new LambdaEffect(() => charas.Rename(ImgName, ImgName + "_old")));
-        }
-        // 添加新的图片
-        effects.Add(
-            new LambdaEffect(() =>
+            if (charas.Has(ImgName))
             {
-                var img = Canvas.AddCharacter(
-                    ImgName,
-                    texture,
-                    interpreter.Eval<Placement>(Placement)
-                );
-                charas.Add(ImgName, img);
-            })
-        );
+                charas.Rename(ImgName, ImgName + "_old");
+            }
+            // 添加新的图片
+            var img = Canvas.AddCharacter(ImgName, texture, interpreter.Eval<Placement>(Placement));
+            charas.Add(ImgName, img);
+        });
+
         if (Effect != null)
         {
             // 应用自定义效果
@@ -202,11 +197,15 @@ public class Show : IScriptBlock
             effects.Add(SetAlpha.Transparent.Bind(() => charas[ImgName]));
             effects.Add(instance.Bind(() => charas[ImgName]));
         }
-        if (charas.Has(ImgName))
+
+        effects.Add(() =>
         {
             // 释放同名图片
-            effects.Add(new LambdaEffect(() => charas.Remove(ImgName + "_old").Drop()));
-        }
+            if (charas.Has(ImgName))
+            {
+                charas.Remove(ImgName + "_old").Drop();
+            }
+        });
         runtime.Animation.mainBuffer.Append(effects.Build());
     }
 
@@ -227,13 +226,16 @@ public class Hide : IScriptBlock
 
     public override void Execute(VNRuntime runtime)
     {
-        var img = runtime.Stage.Characters[Name];
         var effects = new EffectGroupBuilder();
         if (Effect != null)
         {
-            effects.Add(runtime.Script.interpreter.Eval<IEffect>(Effect).Bind(img));
+            effects.Add(
+                runtime
+                    .Script.interpreter.Eval<IEffect>(Effect)
+                    .Bind(() => runtime.Stage.Characters[Name])
+            );
         }
-        effects.Add(new LambdaEffect(() => runtime.Stage.Characters.Remove(Name).Drop()));
+        effects.Add(() => runtime.Stage.Characters.Remove(Name).Drop());
         runtime.Animation.mainBuffer.Append(effects.Build());
     }
 
@@ -255,28 +257,26 @@ public class ChangeBG : IScriptBlock
     public override void Execute(VNRuntime runtime)
     {
         var stage = runtime.Stage;
-        var texture = UniformLoader.Load<Texture2D>(runtime.Script.script.ToPathSTD(ImgPath));
+        var texture = UniformLoader.Load<Texture2D>(runtime.Script.ToPathSTD(ImgPath));
         var effects = new EffectGroupBuilder();
-        effects.Add(
-            new LambdaEffect(() =>
+        effects.Add(() =>
+        {
+            var newBG = Canvas.AddBG(texture, Placement.BG);
+            if (Effect != null)
             {
-                var newBG = Canvas.AddBG(texture, Placement.BG);
-                if (Effect != null)
-                {
-                    newBG.Alpha().Set(0);
-                }
-                var oldBG = stage.Background;
-                stage.Background = newBG;
-                stage.OldBackground = oldBG;
-            })
-        );
+                newBG.Alpha().Set(0);
+            }
+            var oldBG = stage.Background;
+            stage.Background = newBG;
+            stage.OldBackground = oldBG;
+        });
 
         if (Effect != null)
         {
             IEffect instance = runtime.Script.interpreter.Eval(Effect);
             effects.Add(instance.Bind(() => stage.Background));
         }
-        effects.Add(new LambdaEffect(() => stage.OldBackground.Drop()));
+        effects.Add(() => stage.OldBackground.Drop());
         runtime.Animation.mainBuffer.Append(effects.Build());
     }
 
@@ -298,7 +298,7 @@ public class ChangeScene : IScriptBlock
     public override void Execute(VNRuntime runtime)
     {
         var canvas = runtime.Stage;
-        var texture = UniformLoader.Load<Texture2D>(runtime.Script.script.ToPathSTD(BGPath));
+        var texture = UniformLoader.Load<Texture2D>(runtime.Script.ToPathSTD(BGPath));
         var effects = new EffectGroupBuilder();
         if (Effect != null)
         {
@@ -347,8 +347,11 @@ public class ShowChapterName : IScriptBlock
     public override void Execute(VNRuntime runtime)
     {
         var effects = new EffectGroupBuilder();
-        effects.Add(new LambdaEffect(() => runtime.UI.ChapterName = ChapterName));
-        effects.Add(new LambdaEffect(() => runtime.UI.ChapterNameAlpha = 0));
+        effects.Add(() =>
+        {
+            runtime.UI.ChapterName = ChapterName;
+            runtime.UI.ChapterNameAlpha = 0;
+        });
         effects.Add(OpacityEffect.Dissolve().Bind(runtime.UI.ChapterNameBack));
         effects.Add(new Delay(2.0));
         effects.Add(OpacityEffect.Fade().Bind(runtime.UI.ChapterNameBack));
@@ -373,13 +376,11 @@ public class Say : IScriptBlock
     {
         var UI = runtime.UI;
         var effects = new EffectGroupBuilder();
-        effects.Add(
-            LambdaEffect.From(() =>
-            {
-                UI.TextBox.VisibleRatio = 0;
-                UI.CharacterSay(Name, Content);
-            })
-        );
+        effects.Add(() =>
+        {
+            UI.TextBox.VisibleRatio = 0;
+            UI.CharacterSay(Name, Content);
+        });
         effects.Add(
             new MethodInterpolation<float>(
                 UI.TextBoxVisibleRatio,

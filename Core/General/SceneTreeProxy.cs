@@ -15,6 +15,7 @@ public class SceneTreeProxy
     public static RingIO RingIO => Root.GetNode<RingIO>("RingIO");
 
     const string RuntimeRootName = "VNRuntime";
+    const string RuntimeScenePath = "res://scenes/VNRuntime.tscn";
 
     public static Node RuntimeRoot => Root.GetNode<Node>(RuntimeRootName);
 
@@ -50,9 +51,7 @@ public class SceneTreeProxy
         {
             return;
         }
-        var runtimeRoot = UniformLoader
-            .LoadScene("res://EAL/SceneTree/VNRuntime.tscn")
-            .Instantiate();
+        var runtimeRoot = UniformLoader.LoadScene(RuntimeScenePath).Instantiate();
         runtimeRoot.Name = RuntimeRootName;
 
         Root.AddChild(runtimeRoot);
