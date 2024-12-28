@@ -4,7 +4,7 @@ extends Node
 static var cnt := 0
 
 @onready var minigame_scene: PackedScene
-var RingIO: Node = preload("res://EAL/RingIO.cs").new()
+var RingIO: Node = preload("res://Core/RingIO.cs").new()
 
 func game_start():
 	get_tree().root.add_child(RingIO)

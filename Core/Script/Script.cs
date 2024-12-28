@@ -1,5 +1,3 @@
-using RingEngine.Core.General;
-
 namespace RingEngine.Core.Script;
 
 using System;
@@ -11,16 +9,14 @@ using Python.Runtime;
 using RingEngine.Core.Animation;
 using RingEngine.Core.General;
 using RingEngine.Core.Stage;
-using RingEngine.Core.Storage;
 using static RingEngine.Core.General.AssertWrapper;
-using UniformLoader = UniformLoader;
 
 #nullable enable
 
 public class RingScript
 {
     public PathSTD ScriptPath;
-    public List<IScriptBlock> segments;
+    public List<IScriptBlock> segments = [];
 
     public RingScript(PathSTD filePath)
     {

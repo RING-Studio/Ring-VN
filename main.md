@@ -4,27 +4,15 @@ changeBG<img src="assets/bg1.png" alt="bg1" style="zoom:25%;" />with dissolve
 
 ？？？："那么，世界回应了少女，实现了她的心愿？"
 
-```python
-#runtime.Office()
-```
+show<img src="assets/立绘1-惊讶.png" alt="立绘1-惊讶" style="zoom:10%;" />as royu at nearmiddle with dissolve
 
-changeBG <img src="assets/transparent.png" alt="transparent" style="zoom:25%;" />
 
-```python
 
-```
+show<img src="assets/立绘1-叹气.png" alt="立绘1-叹气" style="zoom:10%;" />as royu at nearleft with dissolve
 
 ？？："不完全是这样..."
 
-```python
-#runtime.Office()
-```
-
 ？？："世界以少女的愿望为契机，发生了些许变化，仅此而已。"
-
-```python
-#runtime.InitMiniGame("Breakout")
-```
 
 **label1**
 

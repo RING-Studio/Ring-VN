@@ -4,102 +4,81 @@ Ring Engine的AVG part核心组件
 
 可靠、稳定、测试覆盖
 
-## Architecture
+# Architecture
 
-### Core VN Runtime (Core)
+## Core VN Runtime (Core)
 
 核心运行时，独立维护在C#中的游戏状态和抽象功能操作
 
-#### Script
+### RingIO
 
-|          |                       |
-| -------- | --------------------- |
-| 描述     | 脚本编译、运行        |
-| 内部依赖 | Core其余组件          |
-| 外部依赖 | Python3.11、pythonnet |
-| 引擎依赖 | 无                    |
+与主程序的交互界面，RAII管理全局资源以及process方法托管。
 
-#### Stage
+### Script
 
-|          |                              |
-| -------- | ---------------------------- |
-| 描述     | 角色、背景等可视对象容纳     |
-| 内部依赖 | Core Storage、Core Animation |
-| 外部依赖 | 无                           |
-| 引擎依赖 | EAL Canvas                   |
+DSL 解析器，解释器，pythonnet搭建的inline code执行环境
 
-#### Animation
+### Stage
 
-|          |                                        |
-| -------- | -------------------------------------- |
-| 描述     | 动画定义、执行                         |
-| 内部依赖 | 无                                     |
-| 外部依赖 | 无                                     |
-| 引擎依赖 | EAL Tween、EAL其余系统（作为操作对象） |
-
-#### Storage
-
-|          |                    |
-| -------- | ------------------ |
-| 描述     | 运行状态存储、恢复 |
-| 依赖     | 无                 |
-| 外部依赖 | MessagePack        |
-| 引擎依赖 | EAL Resource       |
-
-#### UI
-
-|          |                |
-| -------- | -------------- |
-| 描述     | 用户界面       |
-| 依赖     | Core Animation |
-| 外部依赖 | 无             |
-| 引擎依赖 | EAL Canvas     |
-
-#### Audio
-
-|          |                |
-| -------- | -------------- |
-| 描述     | 背景音乐、音效 |
-| 依赖     | Core Animation |
-| 外部依赖 | 无             |
-| 引擎依赖 | EAL Audio      |
-
-### Engine Abstraction Layer (EAL)
-
-引擎资源抽象，负责所有与godot对象的操作
+维护整个stage node下的subscene的状态，给main runtime提供一个简化的操作界面，本身不实现任何游戏逻辑。
 
 #### Canvas
 
 场景树Stage部分资源管理与类型转换。
 
-#### Tween
+### Animation
 
-基础动画效果实现。
+脚本的驱动部分
 
-#### Resource
+`IEffect`定义了异步执行单元，`EffectBuffer`定义了由tween驱动的异步执行框架。
 
-资源素材抽象
+- [ ] TODO: 优化异步框架的使用体验，考虑使用`Task`来实现。
 
-导出：
+### Storage
 
-UniformLoader：统一资源加载接口，提供各种静态加载方法。
+|          |                    |
+| -------- | ------------------ |
+| 描述     | 运行状态存储、恢复 |
+| 内部依赖 | 无                 |
+| 外部依赖 | MessagePack        |
+
+### UI
+
+|          |                |
+| -------- | -------------- |
+| 描述     | 用户界面       |
+| 内部依赖 | Core Animation |
+| 外部依赖 | 无             |
+
+### Audio
+
+|          |                |
+| -------- | -------------- |
+| 描述     | 背景音乐、音效 |
+| 内部依赖 | Core Animation |
+| 外部依赖 | 无             |
+
+### General
+
+通用数据结构和工具方法
+
+#### Logger/Assert
+
+将log输出到godot控制台，运行时断言，失败可以log详细的错误位置并抛出异常。
+
+#### PathSTD
+
+统一的文件路径表示，转换godot和C#路径
+
+#### UniformLoader
+
+资源读写工具类
 
 #### SceneTreeProxy
 
-场景树代理静态类，维护场景树结构，提供godot类型和ring类型的转换与隔离。
+VNRuntime场景树对C#侧提供的静态界面，硬编码了场景结构，场景修改后要同步修改。
 
-#### General
+#### NodeExtensions
 
-通用模块
+给各个Node类型添加的qol方法。
 
-导出：
-
-Logger：标准日志记录接口，输出到godot console方便调试。
-
-AssetWrapper：静态类，提供断言方法集合，有丰富的debug信息。
-
-PathSTD：标准文件系统路径，统一Godot和C#的文件路径。
-
-#### RingIO
-
-与主程序的交互界面，RAII管理全局资源以及process方法托管。
