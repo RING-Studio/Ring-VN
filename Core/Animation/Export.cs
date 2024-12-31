@@ -56,14 +56,14 @@ public class AnimationModule
     {
         mainBuffer.Execute();
         nonBlockingBuffer.Execute();
+        foreach (var buffer in TempBuffers)
+        {
+            buffer.Execute();
+        }
         var finished = TempBuffers.Where((buffer) => !buffer.IsRunning).ToList();
         foreach (var buffer in finished)
         {
             TempBuffers.Remove(buffer);
-        }
-        foreach (var buffer in TempBuffers)
-        {
-            buffer.Execute();
         }
     }
 }

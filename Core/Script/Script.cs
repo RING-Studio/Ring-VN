@@ -186,9 +186,10 @@ public class Show : IScriptBlock
             {
                 img.Alpha().Set(0);
             }
-            // TODO:找时间解决这个workaround
-            if (has_old && Effect != null)
+            // 图片位置不变加Fade会导致图片闪烁
+            if (has_old && Effect != null && img.Placement() != charas.Old[ImgName].Placement())
             {
+                // TODO:找时间解决这个workaround
                 runtime.Animation.AddTempEffect(
                     OpacityEffect.Fade().Bind(() => charas.Old[ImgName])
                 );

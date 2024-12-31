@@ -1,10 +1,12 @@
 namespace RingEngine.Core.Animation;
 
 using System;
+using System.Collections.Generic;
 using Godot;
 
-public class Placement
+public class Placement : IEquatable<Placement>
 {
+    static float eps = 0.0001f;
     public float x;
     public float y;
     public float scale;
@@ -27,11 +29,17 @@ public class Placement
 
     public static Placement BG => new(0.0, 0.0, 1.0);
 
-    public override bool Equals(object obj) =>
-        obj is Placement placement
-        && this.x == placement.x
-        && this.y == placement.y
-        && this.scale == placement.scale;
+    public override bool Equals(object obj) => this.Equals(obj as Placement);
+
+    public bool Equals(Placement other) =>
+        other is not null && Math.Abs(this.x - other.x) < eps
+        && Math.Abs(this.y - other.y) < eps
+        && Math.Abs(this.scale - other.scale) < eps;
 
     public override int GetHashCode() => HashCode.Combine(this.x, this.y, this.scale);
+
+    public static bool operator ==(Placement left, Placement right) =>
+        EqualityComparer<Placement>.Default.Equals(left, right);
+
+    public static bool operator !=(Placement left, Placement right) => !(left == right);
 }

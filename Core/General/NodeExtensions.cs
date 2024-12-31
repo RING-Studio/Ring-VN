@@ -1,5 +1,7 @@
 namespace RingEngine.Core.General;
 
+using System;
+using System.Collections.Generic;
 using Godot;
 using RingEngine.Core.Animation;
 
@@ -19,9 +21,11 @@ public class AlphaProxy
     public AlphaProxy(CanvasItem node) => _Node = node;
 }
 
-public class PlacementProxy
+public class PlacementProxy : IEquatable<PlacementProxy>
 {
     Node2D _Node;
+
+    public PlacementProxy(Node2D node) => _Node = node;
 
     public static implicit operator Placement(PlacementProxy proxy) =>
         new(proxy._Node.Position, proxy._Node.Scale.X);
@@ -32,7 +36,40 @@ public class PlacementProxy
         _Node.Scale = new(value.scale, value.scale);
     }
 
-    public PlacementProxy(Node2D node) => _Node = node;
+    public static bool operator ==(PlacementProxy left, PlacementProxy right) =>
+        EqualityComparer<PlacementProxy>.Default.Equals(left, right);
+
+    public static bool operator !=(PlacementProxy left, PlacementProxy right) => !(left == right);
+
+    public override bool Equals(object obj) => this.Equals(obj as PlacementProxy);
+
+    public bool Equals(PlacementProxy other) =>
+        other is not null && EqualityComparer<Placement>.Default.Equals(this, other);
+
+    public override int GetHashCode() => HashCode.Combine((Placement)this);
+}
+
+public class ControlPlacementProxy : IEquatable<ControlPlacementProxy>
+{
+    Control _Node;
+
+    public ControlPlacementProxy(Control node) => _Node = node;
+
+    public static implicit operator Placement(ControlPlacementProxy proxy) =>
+        new(proxy._Node.Position, proxy._Node.Scale.X);
+
+    public void Set(Placement value)
+    {
+        _Node.Position = value.Position;
+        _Node.Scale = new(value.scale, value.scale);
+    }
+
+    public static bool operator ==(ControlPlacementProxy left, ControlPlacementProxy right) => EqualityComparer<ControlPlacementProxy>.Default.Equals(left, right);
+    public static bool operator !=(ControlPlacementProxy left, ControlPlacementProxy right) => !(left == right);
+
+    public override bool Equals(object obj) => this.Equals(obj as ControlPlacementProxy);
+    public bool Equals(ControlPlacementProxy other) => other is not null && EqualityComparer<Placement>.Default.Equals(this, other);
+    public override int GetHashCode() => HashCode.Combine((Placement)this);
 }
 
 public static class NodeExtensions
@@ -59,5 +96,5 @@ public static class Node2DExtensions
 
 public static class ControlExtensions
 {
-    public static PlacementProxy Placement(this Node2D node) => new(node);
+    public static ControlPlacementProxy Placement(this Control node) => new(node);
 }
