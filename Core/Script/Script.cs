@@ -29,6 +29,7 @@ public class RingScript
         {
             Logger.Error(ex.Message);
         }
+        Logger.Log($"Script Loaded: {ScriptPath}, block number: {segments.Count}");
     }
 
     // 将相对于脚本的路径转换为相对于根目录的路径
@@ -144,6 +145,7 @@ public class Branch : IScriptBlock
                 throw new UnreachableException();
         }
         //TODO: 停止脚本执行，等待branch回调
+        runtime.Paused = true;
     }
 }
 

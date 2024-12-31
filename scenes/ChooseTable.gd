@@ -1,7 +1,8 @@
 extends Control
 
 var Callback: Callable
-var Texts: Array[String]
+# C#到GDScript的string类型转换有bug，不能用Array[String]
+var Texts: Array
 
 func _ready() -> void:
 	for child in $MarginContainer/HBoxContainer.get_children():
@@ -15,4 +16,6 @@ func _ready() -> void:
 func choose(index: int, text := ""):
 	Callback.call(index, text)
 	#TODO: 选项卡消失动画
+	if self.get_parent():
+		self.get_parent().remove_child(self)
 	queue_free()

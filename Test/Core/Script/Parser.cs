@@ -195,6 +195,22 @@ public class TestBuiltInParser
     }
 
     [TestMethod]
+    public void ParseHide()
+    {
+        var ret = BuiltInFunctionParser.HideParser.End().Parse(@"hide 红叶");
+        Assert.AreEqual("红叶", ret.Name);
+        Assert.IsNull(ret.Effect);
+    }
+
+    [TestMethod]
+    public void ParseHideWithEffect()
+    {
+        var ret = BuiltInFunctionParser.HideParser.End().Parse(@"hide 红叶 with dissolve");
+        Assert.AreEqual("红叶", ret.Name);
+        Assert.AreEqual("dissolve", ret.Effect);
+    }
+
+    [TestMethod]
     public void ParseChangeBG()
     {
         var ret = BuiltInFunctionParser
@@ -234,19 +250,16 @@ public class TestBuiltInParser
     }
 
     [TestMethod]
-    public void ParseHide()
+    [DataRow(
+        @"changeScene <img src=""assets/bg2.jpg"" alt=""bg2"" style=""zoom:15%;"" />with ImageTrans(""./assets/Runtime/wink.png"")",
+        "assets/bg2.jpg",
+        "ImageTrans(\"./assets/Runtime/wink.png\")"
+    )]
+    public void ParseChangeScene(string input, string bgPath, string? effect)
     {
-        var ret = BuiltInFunctionParser.HideParser.End().Parse(@"hide 红叶");
-        Assert.AreEqual("红叶", ret.Name);
-        Assert.IsNull(ret.Effect);
-    }
-
-    [TestMethod]
-    public void ParseHideWithEffect()
-    {
-        var ret = BuiltInFunctionParser.HideParser.End().Parse(@"hide 红叶 with dissolve");
-        Assert.AreEqual("红叶", ret.Name);
-        Assert.AreEqual("dissolve", ret.Effect);
+        var ret = BuiltInFunctionParser.ChangeSceneParser.End().Parse(input);
+        Assert.AreEqual(bgPath, ret.BGPath);
+        Assert.AreEqual(effect, ret.Effect);
     }
 
     [TestMethod]

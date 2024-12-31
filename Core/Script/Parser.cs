@@ -204,7 +204,7 @@ public static class BuiltInFunctionParser
         from _ in Parse.String("changeScene").Token()
         from imgOpen in Parse.String("<img src=\"")
         from path in Parse.CharExcept('"').Many().Text()
-        from imgClose in Parse.String("\"").Token().Then(_ => Parse.String("/>"))
+        from imgClose in Parse.AnyChar.Until(Parse.String("/>"))
         from withEffect in (
             from _ in Parse.String("with").Token()
             from effect in InlineCodeBlockParser.XOr(IdentifierParser)

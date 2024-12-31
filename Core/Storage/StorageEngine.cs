@@ -13,6 +13,11 @@ public class StorageEngine
     public int PC;
 
     /// <summary>
+    /// 运行时是否暂停
+    /// </summary>
+    public bool Paused;
+
+    /// <summary>
     /// 其它数据，为了使python可调用需要限制类型
     /// </summary>
     public Dictionary<string, string> Data = [];

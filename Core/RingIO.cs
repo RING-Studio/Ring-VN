@@ -15,6 +15,13 @@ public partial class RingIO : Node
     public VNRuntime Runtime;
     public Queue<Callable> Callbacks = [];
 
+    [Export]
+    public int PC
+    {
+        get => Runtime.Storage.Global.PC;
+        set => Runtime.Storage.Global.PC = value;
+    }
+
     /// <summary>
     /// 快速完成所有pending的动画，可能需要多帧时间
     /// </summary>

@@ -14,6 +14,11 @@ using static General.AssertWrapper;
 public class VNRuntime
 {
     public bool CanSnapshot = true;
+    public bool Paused
+    {
+        get => Storage.Global.Paused;
+        set => Storage.Global.Paused = value;
+    }
     public ScriptModule Script;
     public UIModule UI;
     public StageModule Stage;
@@ -24,7 +29,10 @@ public class VNRuntime
     public VNRuntime()
     {
         Script = new ScriptModule(this, "res://main.md", "res://init.py");
-        UI = new UIModule();
+        UI = new UIModule()
+        {
+            runtime = this
+        };
         Stage = new StageModule();
         Storage = new StorageModule();
         Animation = new AnimationModule();
@@ -55,6 +63,11 @@ public class VNRuntime
     /// </summary>
     public void Step()
     {
+        if (Storage.Global.Paused)
+        {
+            Logger.Log("Runtime is paused, no stepping.");
+            return;
+        }
         if (Animation.nonBlockingBuffer.IsRunning)
         {
             Animation.nonBlockingBuffer.Interrupt();
@@ -72,7 +85,7 @@ public class VNRuntime
         }
         else
         {
-            throw new IndexOutOfRangeException("Script Out of Bound!");
+            Logger.Error("Script Out of Bound!");
         }
     }
 

@@ -49,5 +49,3 @@ text = "选项3"
 icon = ExtResource("3_fak85")
 icon_alignment = 1
 vertical_icon_alignment = 0
-
-[connection signal="pressed" from="MarginContainer/HBoxContainer/Button" to="MarginContainer/HBoxContainer/Button" method="_on_pressed"]

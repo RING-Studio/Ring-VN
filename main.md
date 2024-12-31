@@ -52,7 +52,7 @@ UIAnim fade
 
 ## Chapter 1
 
-changeScene <img src="assets/bg2.jpg" alt="bg2" style="zoom:15%;" />with ImageTrans("./assets/Runtime/wink.png")
+changeScene <img src="assets/bg2.jpg" alt="bg2" style="zoom:15%;" /> with dissolveTrans
 
 UIAnim dissolve
 
@@ -64,7 +64,7 @@ UIAnim dissolve
 ？？？："这是我的回光返照了吗...还是..."
 ："梦里我似乎在一片氤氲着甜蜜花香的树林中漫步，然后听到了谁人在吟诵着诗歌。"
 
-changeScene <img src="assets/bg1.png" alt="bg1" style="zoom:25%;" />with ImageTrans("./assets/Runtime/wink.png")
+changeScene <img src="assets/bg1.png" alt="bg1" style="zoom:25%;" />with dissolveTrans
 
 changeBG <img src="./assets/nexhos001_n_19201440.jpg" alt="nexhos001_n_19201440" style="zoom: 25%;" /> with `dissolve`
 

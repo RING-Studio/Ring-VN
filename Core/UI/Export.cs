@@ -9,6 +9,7 @@ using RingEngine.Core.Script;
 
 public class UIModule
 {
+    public VNRuntime runtime;
     public Control Root => SceneTreeProxy.UIRoot;
     public RichTextLabel TextBox => SceneTreeProxy.TextBox;
     public RichTextLabel CharacterNameBox => SceneTreeProxy.CharacterNameBox;
@@ -60,8 +61,9 @@ public class UIModule
         SceneTreeProxy.UIRoot.AddChild(branchRoot);
     }
 
-    public static void BranchCallBack(int index, string text)
+    public void BranchCallBack(int index, string text)
     {
+        runtime.Paused = false;
         Logger.Log($"BranchCallBack {index} {text}");
     }
 }
