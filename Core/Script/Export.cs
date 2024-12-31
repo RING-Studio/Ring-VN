@@ -17,7 +17,8 @@ public class ScriptModule
     public int Length => script.segments.Count;
 
     // 将相对于脚本的路径转换为相对于根目录的路径
-    public PathSTD ToPathSTD(string filePath) => script.ToPathSTD(filePath);
+    public PathSTD StandardizePath(string filePath) => script.StandardizePath(filePath);
+    public PathSTD StandardizePath(PathSTD filePath) => script.StandardizePath(filePath);
 
     public ScriptModule(VNRuntime runtime, PathSTD entryPointPath, PathSTD initCodePath)
     {

@@ -32,7 +32,8 @@ public class RingScript
     }
 
     // 将相对于脚本的路径转换为相对于根目录的路径
-    public PathSTD ToPathSTD(string filePath) => PathSTD.From(ScriptPath.Directory) + filePath;
+    public PathSTD StandardizePath(string filePath) => PathSTD.From(ScriptPath.Directory) + filePath;
+    public PathSTD StandardizePath(PathSTD filePath) => PathSTD.From(ScriptPath.Directory) + filePath;
 }
 
 public abstract class IScriptBlock
@@ -51,15 +52,15 @@ public abstract class IScriptBlock
 
 public class ChangeScript : IScriptBlock
 {
-    public PathSTD ScriptPath;
+    public PathSTD NewScriptPath;
     public ChangeScript(PathSTD path)
     {
         Continue = true;
-        ScriptPath = path;
+        NewScriptPath = path;
     }
     public override void Execute(VNRuntime runtime)
     {
-        runtime.Script.script = new RingScript(runtime.Script.ToPathSTD(ScriptPath.RelativePath));
+        runtime.Script.script = new RingScript(runtime.Script.StandardizePath(NewScriptPath));
         // 重置PC
         runtime.Storage.Global.PC = -1;
     }
@@ -149,11 +150,11 @@ public class Branch : IScriptBlock
 public class Show : IScriptBlock
 {
     public string ImgName;
-    public string ImgPath;
+    public PathSTD ImgPath;
     public string Placement;
     public string? Effect;
 
-    public Show(string path, string placement, string? effect, string name)
+    public Show(PathSTD path, string placement, string? effect, string name)
     {
         Continue = true;
         ImgName = name;
@@ -164,7 +165,7 @@ public class Show : IScriptBlock
 
     public override void Execute(VNRuntime runtime)
     {
-        var texture = UniformLoader.Load<Texture2D>(runtime.Script.script.ToPathSTD(ImgPath));
+        var texture = UniformLoader.Load<Texture2D>(runtime.Script.script.StandardizePath(ImgPath));
         var charas = runtime.Stage.Characters;
         var interpreter = runtime.Script.interpreter;
         var effects = new EffectGroupBuilder();
@@ -247,10 +248,10 @@ public class Hide : IScriptBlock
 
 public class ChangeBG : IScriptBlock
 {
-    public string ImgPath;
+    public PathSTD ImgPath;
     public string? Effect;
 
-    public ChangeBG(string path, string? effect)
+    public ChangeBG(PathSTD path, string? effect)
     {
         Continue = true;
         ImgPath = path;
@@ -260,7 +261,7 @@ public class ChangeBG : IScriptBlock
     public override void Execute(VNRuntime runtime)
     {
         var stage = runtime.Stage;
-        var texture = UniformLoader.Load<Texture2D>(runtime.Script.ToPathSTD(ImgPath));
+        var texture = UniformLoader.Load<Texture2D>(runtime.Script.StandardizePath(ImgPath));
         var effects = new EffectGroupBuilder();
         effects.Add(() =>
         {
@@ -288,10 +289,10 @@ public class ChangeBG : IScriptBlock
 
 public class ChangeScene : IScriptBlock
 {
-    public string BGPath;
+    public PathSTD BGPath;
     public string? Effect;
 
-    public ChangeScene(string path, string? effect)
+    public ChangeScene(PathSTD path, string? effect)
     {
         //@continue = true;
         BGPath = path;
@@ -301,7 +302,7 @@ public class ChangeScene : IScriptBlock
     public override void Execute(VNRuntime runtime)
     {
         var canvas = runtime.Stage;
-        var texture = UniformLoader.Load<Texture2D>(runtime.Script.ToPathSTD(BGPath));
+        var texture = UniformLoader.Load<Texture2D>(runtime.Script.StandardizePath(BGPath));
         var effects = new EffectGroupBuilder();
         if (Effect != null)
         {
@@ -401,12 +402,12 @@ public class Say : IScriptBlock
 public class PlayAudio : IScriptBlock
 {
     // path to the audio file("" excluded)
-    string Path;
+    PathSTD Path;
 
     // 淡入效果持续时间（秒）
     float FadeInTime;
 
-    public PlayAudio(string path, double fadeInTime = 0.5)
+    public PlayAudio(PathSTD path, double fadeInTime = 0.5)
     {
         Continue = true;
         Path = path;

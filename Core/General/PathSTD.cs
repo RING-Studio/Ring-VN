@@ -8,7 +8,7 @@ using Godot;
 public class PathSTD : IEquatable<PathSTD>
 {
     /// <summary>
-    /// 以根目录为基准的路径，没有前缀，路径分隔符为"/"，文件夹没有"/"结尾
+    /// 相对路径，没有前缀，路径分隔符为"/"，文件夹没有"/"结尾
     /// </summary>
     public string RelativePath { get; }
 
@@ -48,6 +48,9 @@ public class PathSTD : IEquatable<PathSTD>
 
     public static PathSTD operator +(PathSTD a, string b) =>
         From(a.RelativePath + "/" + From(b).RelativePath);
+
+    public static PathSTD operator +(PathSTD a, PathSTD b) =>
+        From(a.RelativePath + "/" + b.RelativePath);
 
     public static implicit operator PathSTD(string path) => From(path);
 

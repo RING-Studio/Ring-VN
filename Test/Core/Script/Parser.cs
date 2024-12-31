@@ -275,6 +275,6 @@ public class TestBuiltInParser
     public void ParseChangeScript(string input, string scriptPath)
     {
         var ret = BuiltInFunctionParser.ChangeScriptParser.End().Parse(input);
-        Assert.AreEqual(PathSTD.From(scriptPath), ret.ScriptPath);
+        Assert.AreEqual(PathSTD.From(scriptPath), ret.NewScriptPath);
     }
 }
