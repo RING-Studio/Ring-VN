@@ -9,6 +9,7 @@ using static RingEngine.Core.General.AssertWrapper;
 public class EffectGroup
 {
     public List<IEffect> Effects;
+
     /// <summary>
     /// Tween绑定对象，如果为null则绑定在RingIO上
     /// </summary>

@@ -90,6 +90,7 @@ public class Delay : IEffect
 public class ParallelEffect : IEffect
 {
     public IEffect[] Effects;
+
     public ParallelEffect(params IEffect[] effects)
     {
         Effects = effects;
@@ -99,7 +100,6 @@ public class ParallelEffect : IEffect
 
     public override void Apply(Tween tween)
     {
-        tween.SetParallel();
         var first_effect = Effects[0];
         first_effect.Apply(tween);
         // 假设每个Apply中只有一个Tween方法
@@ -110,5 +110,6 @@ public class ParallelEffect : IEffect
         }
         tween.SetParallel(false);
     }
+
     public override double GetDuration() => Effects.Select(effect => effect.GetDuration()).Max();
 }

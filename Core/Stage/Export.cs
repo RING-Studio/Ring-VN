@@ -36,6 +36,23 @@ public class StageModule
     }
 }
 
+public class OldCharactersProxy
+{
+    const string suffix = "_old";
+    public Characters Characters;
+
+    public OldCharactersProxy(Characters characters)
+    {
+        Characters = characters;
+    }
+
+    public Sprite2D this[string name] => Characters[name + suffix];
+
+    public bool Has(string name) => Characters.Has(name + suffix);
+
+    public Sprite2D Remove(string name) => Characters.Remove(name + suffix);
+}
+
 public class Characters
 {
     Dictionary<string, Sprite2D> _Characters = [];
@@ -47,6 +64,11 @@ public class Characters
 
     public Sprite2D this[string name] => _Characters[name];
 
+    /// <summary>
+    /// 用于访问标记为old的角色。
+    /// </summary>
+    public OldCharactersProxy Old => new(this);
+
     public bool Has(string name) => _Characters.ContainsKey(name);
 
     public void Rename(string name, string newName)
@@ -56,6 +78,14 @@ public class Characters
         character.Name = newName;
         _Characters.Remove(name);
         _Characters[newName] = character;
+    }
+
+    /// <summary>
+    /// 将角色标记为old，角色名会添加后缀"_old"。
+    /// </summary>
+    public void MarkAsOld(string name)
+    {
+        Rename(name, name + "_old");
     }
 
     public void Add(string name, Sprite2D character)

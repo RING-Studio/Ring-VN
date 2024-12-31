@@ -185,7 +185,7 @@ public class Show : IScriptBlock
             if (charas.Has(ImgName))
             {
                 has_old = true;
-                charas.Rename(ImgName, ImgName + "_old");
+                charas.MarkAsOld(ImgName);
             }
             // 添加新的图片
             var img = Canvas.AddCharacter(ImgName, texture, interpreter.Eval<Placement>(Placement));
@@ -198,7 +198,7 @@ public class Show : IScriptBlock
             if (has_old && Effect != null)
             {
                 runtime.Animation.AddTempEffect(
-                    OpacityEffect.Fade().Bind(() => charas[ImgName + "_old"])
+                    OpacityEffect.Fade().Bind(() => charas.Old[ImgName])
                 );
             }
         });
@@ -213,9 +213,9 @@ public class Show : IScriptBlock
         effects.Add(() =>
         {
             // 释放同名图片
-            if (charas.Has(ImgName + "_old"))
+            if (charas.Old.Has(ImgName))
             {
-                charas.Remove(ImgName + "_old").Drop();
+                charas.Old.Remove(ImgName).Drop();
             }
         });
         runtime.Animation.mainBuffer.Append(effects.Build());
