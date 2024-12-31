@@ -1,9 +1,11 @@
 namespace RingEngine.Core.General;
 
+using System;
+using System.Collections.Generic;
 using System.IO;
 using Godot;
 
-public class PathSTD
+public class PathSTD : IEquatable<PathSTD>
 {
     /// <summary>
     /// 以根目录为基准的路径，没有前缀，路径分隔符为"/"，文件夹没有"/"结尾
@@ -28,6 +30,8 @@ public class PathSTD
 
     public static PathSTD From(string path)
     {
+        // 脚本解析出来的路径可能有空格
+        path = path.Trim();
         if (path.StartsWith("res://"))
         {
             return new PathSTD(path.TrimPrefix("res://"));
@@ -46,4 +50,13 @@ public class PathSTD
         From(a.RelativePath + "/" + From(b).RelativePath);
 
     public static implicit operator PathSTD(string path) => From(path);
+
+    // Generated
+    public override bool Equals(object obj) => this.Equals(obj as PathSTD);
+    public bool Equals(PathSTD other) => other is not null && this.RelativePath == other.RelativePath;
+    public override int GetHashCode() => HashCode.Combine(this.RelativePath);
+    public override string ToString() => RelativePath;
+
+    public static bool operator ==(PathSTD left, PathSTD right) => EqualityComparer<PathSTD>.Default.Equals(left, right);
+    public static bool operator !=(PathSTD left, PathSTD right) => !(left == right);
 }

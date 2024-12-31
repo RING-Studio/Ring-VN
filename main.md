@@ -4,6 +4,8 @@ changeBG<img src="assets/bg1.png" alt="bg1" style="zoom:25%;" />with dissolve
 
 ？？？："那么，世界回应了少女，实现了她的心愿？"
 
+changeScript  [sub.md](Scripts\sub.md) 
+
 show<img src="assets/立绘1-惊讶.png" alt="立绘1-惊讶" style="zoom:10%;" />as royu at nearmiddle with dissolve
 
 
@@ -22,7 +24,7 @@ show<img src="assets/立绘1-叹气.png" alt="立绘1-叹气" style="zoom:10%;" 
 
 ？？？："这也...太悲哀了。"
 
-| 竖排  |        |
+| 横排  |        |
 | ----- | ------ |
 | 选项1 | label1 |
 | 选项2 | label2 |

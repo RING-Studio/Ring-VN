@@ -2,6 +2,7 @@ namespace Test.Core.Script;
 
 using System.Collections.Generic;
 using System.Linq;
+using RingEngine.Core.General;
 using RingEngine.Core.Script;
 using Sprache;
 
@@ -264,5 +265,16 @@ public class TestBuiltInParser
     {
         var ret = BuiltInFunctionParser.UIAnimParser.End().Parse(input);
         Assert.AreEqual(effect, ret.Effect);
+    }
+
+    [TestMethod]
+    [DataRow(@"changeScript [a](a.md)", "a.md")]
+    [DataRow(@"changeScript [ a ]( a.md )", "a.md")]
+    [DataRow(@"changeScript [ a ](Scripts/a.md)", "Scripts/a.md")]
+    [DataRow(@"changeScript [ a ](Scripts\a.md)", "Scripts/a.md")]
+    public void ParseChangeScript(string input, string scriptPath)
+    {
+        var ret = BuiltInFunctionParser.ChangeScriptParser.End().Parse(input);
+        Assert.AreEqual(PathSTD.From(scriptPath), ret.ScriptPath);
     }
 }

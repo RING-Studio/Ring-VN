@@ -68,7 +68,7 @@ public class VNRuntime
         {
             // 脚本执行前是稳态，所有动画都已结束，在这里进行Snapshot
             Storage.Global.History.Add(new Snapshot(this));
-            Storage.Global.PC = Script.Step(Storage.Global.PC, this);
+            Script.Step(ref Storage.Global.PC, this);
         }
         else
         {

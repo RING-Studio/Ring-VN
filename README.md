@@ -18,6 +18,10 @@ Ring Engine的AVG part核心组件
 
 DSL 解析器，解释器，pythonnet搭建的inline code执行环境
 
+- [x] 支持多文件
+    - [x] changeScript
+    - [ ] bonus:支持返回跳转点
+
 ### Stage
 
 维护整个stage node下的subscene的状态，给main runtime提供一个简化的操作界面，本身不实现任何游戏逻辑。

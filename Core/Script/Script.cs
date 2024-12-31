@@ -49,6 +49,22 @@ public abstract class IScriptBlock
     public abstract void Execute(VNRuntime runtime);
 }
 
+public class ChangeScript : IScriptBlock
+{
+    public PathSTD ScriptPath;
+    public ChangeScript(PathSTD path)
+    {
+        Continue = true;
+        ScriptPath = path;
+    }
+    public override void Execute(VNRuntime runtime)
+    {
+        runtime.Script.script = new RingScript(runtime.Script.ToPathSTD(ScriptPath.RelativePath));
+        // 重置PC
+        runtime.Storage.Global.PC = -1;
+    }
+}
+
 public class Label : IScriptBlock
 {
     public string Name { get; set; }
@@ -63,29 +79,32 @@ public class Label : IScriptBlock
     public override void Execute(VNRuntime runtime) { }
 }
 
-public class CodeBlock : IScriptBlock
+/// <summary>
+/// 非条件跳转，条件跳转包含在Branch中了。
+/// </summary>
+public class JumpToLabel : IScriptBlock
 {
-    // language specified in markdown codeblock(unused)
-    public string Identifier;
-    public string Code;
+    public string LabelName;
 
-    public CodeBlock(string identifier, string code)
+    public JumpToLabel(string labelName)
     {
         Continue = true;
-        Code = code;
-        Identifier = identifier;
+        this.LabelName = labelName;
     }
 
-    /// <summary>
-    /// 执行Python代码块,异常处理交给外层
-    /// </summary>
-    /// <exception cref="PythonException">Python解释器抛出的异常</exception>
     public override void Execute(VNRuntime runtime)
     {
-        runtime.Script.interpreter.Exec(Code);
+        for (var i = 0; i < runtime.Script.script.segments.Count; i++)
+        {
+            if (runtime.Script.script.segments[i] is Label label && label.Name == LabelName)
+            {
+                // Execute结束后会PC++，所以这里要减1
+                // 其实可以不减，因为Label不做操作
+                runtime.Storage.Global.PC = i - 1;
+                return;
+            }
+        }
     }
-
-    public override string ToString() => $"CodeBlock: identifier: {Identifier}, code: {Code}";
 }
 
 public class Branch : IScriptBlock
@@ -124,34 +143,6 @@ public class Branch : IScriptBlock
                 throw new UnreachableException();
         }
         //TODO: 停止脚本执行，等待branch回调
-    }
-}
-
-/// <summary>
-/// 非条件跳转，条件跳转包含在Branch中了。
-/// </summary>
-public class JumpToLabel : IScriptBlock
-{
-    public string LabelName;
-
-    public JumpToLabel(string labelName)
-    {
-        Continue = true;
-        this.LabelName = labelName;
-    }
-
-    public override void Execute(VNRuntime runtime)
-    {
-        for (var i = 0; i < runtime.Script.script.segments.Count; i++)
-        {
-            if (runtime.Script.script.segments[i] is Label label && label.Name == LabelName)
-            {
-                // Execute结束后会PC++，所以这里要减1
-                // 其实可以不减，因为Label不做操作
-                runtime.Storage.Global.PC = i - 1;
-                return;
-            }
-        }
     }
 }
 
@@ -478,4 +469,29 @@ public class StopAudio : IScriptBlock
         //        .Build()
         //);
     }
+}
+
+public class CodeBlock : IScriptBlock
+{
+    // language specified in markdown codeblock(unused)
+    public string Identifier;
+    public string Code;
+
+    public CodeBlock(string identifier, string code)
+    {
+        Continue = true;
+        Code = code;
+        Identifier = identifier;
+    }
+
+    /// <summary>
+    /// 执行Python代码块,异常处理交给外层
+    /// </summary>
+    /// <exception cref="PythonException">Python解释器抛出的异常</exception>
+    public override void Execute(VNRuntime runtime)
+    {
+        runtime.Script.interpreter.Exec(Code);
+    }
+
+    public override string ToString() => $"CodeBlock: identifier: {Identifier}, code: {Code}";
 }

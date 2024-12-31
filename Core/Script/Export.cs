@@ -34,8 +34,7 @@ public class ScriptModule
     /// </summary>
     /// <param name="index">下一条需要执行的语句</param>
     /// <param name="runtime"></param>
-    /// <returns>下次执行时第一条需要被执行的语句</returns>
-    public int Step(int index, VNRuntime runtime)
+    public void Step(ref int index, VNRuntime runtime)
     {
         var @continue = false;
         do
@@ -44,7 +43,6 @@ public class ScriptModule
             script.segments[index].Execute(runtime);
             index++;
         } while (@continue && index < Length);
-        return index;
     }
 
     public string Serialize()

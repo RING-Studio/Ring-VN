@@ -226,11 +226,18 @@ public static class BuiltInFunctionParser
         from _ in Parse.String("stopAudio").Token()
         select new StopAudio();
 
+    public static readonly Parser<ChangeScript> ChangeScriptParser =
+        from _ in Parse.String("changeScript").Token()
+        from displayName in Parse.Char('[').Then(_ => Parse.AnyChar.Until(Parse.Char(']')).Text())
+        from scriptPath in Parse.Char('(').Then(_ => Parse.AnyChar.Until(Parse.Char(')')).Text())
+        select new ChangeScript(scriptPath);
+
     public static readonly Parser<IScriptBlock> BuiltInFunction = ShowParser
         .Or<IScriptBlock>(HideParser)
         .Or(ChangeBGParser)
         .Or(ChangeSceneParser)
         .Or(JumpToLabelParser)
         .Or(UIAnimParser)
-        .Or(StopAudioParser);
+        .Or(StopAudioParser)
+        .Or(ChangeScriptParser);
 }

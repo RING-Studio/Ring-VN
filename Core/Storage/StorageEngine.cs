@@ -10,7 +10,7 @@ public class StorageEngine
     /// <summary>
     /// 下一条执行的代码块index
     /// </summary>
-    public int PC { get; set; }
+    public int PC;
 
     /// <summary>
     /// 其它数据，为了使python可调用需要限制类型
