@@ -44,6 +44,8 @@ show<img src="assets/立绘1-叹气.png" alt="立绘1-叹气" style="zoom:10%;" 
 
 ？？："然而当他们真的认识到个中含义时，那东西早已被燃尽，灰烬都找不见了。"
 
+hide royu with fade
+
 changeBG <img src="assets/black.png" alt="black" style="zoom:25%;" />with dissolve
 
 UIAnim fade
@@ -52,7 +54,7 @@ UIAnim fade
 
 ## Chapter 1
 
-changeScene <img src="assets/bg2.jpg" alt="bg2" style="zoom:15%;" /> with dissolveTrans
+changeBG <img src="assets/bg2.jpg" alt="bg2" style="zoom:15%;" /> with dissolve
 
 UIAnim dissolve
 
@@ -64,9 +66,9 @@ UIAnim dissolve
 ？？？："这是我的回光返照了吗...还是..."
 ："梦里我似乎在一片氤氲着甜蜜花香的树林中漫步，然后听到了谁人在吟诵着诗歌。"
 
-changeScene <img src="assets/bg1.png" alt="bg1" style="zoom:25%;" />with dissolveTrans
+changeBG <img src="assets/bg1.png" alt="bg1" style="zoom:25%;" />with dissolve
 
-changeBG <img src="./assets/nexhos001_n_19201440.jpg" alt="nexhos001_n_19201440" style="zoom: 25%;" /> with `dissolve`
+changeBG <img src="./assets/bg2.jpg" alt="nexhos001_n_19201440" style="zoom: 25%;" /> with `dissolve`
 
 ？？？："......"
 ："我尝试活动身体，然而发现四肢无论怎样也使不上劲，只能靠扭动躯体才能勉强坐起来。"
@@ -128,7 +130,7 @@ changeBG <img src="assets/斏壺奨偺墂慜乮梉曽乯-1709450416437-4.jpg" al
 羽艾："……"
 ："怎么我就急匆匆得没想起来买一根冰棍，这天已经这么折磨了，还要被人秀。"
 
-changeScene <img src="assets/bg03319201080.jpg" alt="bg03319201080" style="zoom:25%;" />with ImageTrans("./assets/Runtime/wink.png")
+changeScene <img src="assets/bg03319201080.jpg" alt="bg03319201080" style="zoom:25%;" />with dissolveTrans
 
 路汐："啊呀啊呀，这就受不了了吗？"
 
@@ -146,7 +148,7 @@ show<img src="assets/立绘1-微笑.png" alt="立绘1-微笑" style="zoom:10%;" 
 
 hide royu with dissolve
 
-changeScene<img src="assets/斏壺奨偺墂慜乮梉曽乯.jpg" alt="斏壺奨偺墂慜乮梉曽乯" style="zoom:25%;" /> with ImageTrans("./assets/Runtime/wink.png")
+changeScene<img src="assets/斏壺奨偺墂慜乮梉曽乯.jpg" alt="斏壺奨偺墂慜乮梉曽乯" style="zoom:25%;" /> with dissolveTrans
 
 ："脑海里出现了某人的脸，然后她自动地说着话。"
 ："如果这副样子被路汐学姐看见的话，一定会被这样嘲笑吧。"

@@ -2,6 +2,7 @@ extends Control
 
 var Callback: Callable
 # C#到GDScript的string类型转换有bug，不能用Array[String]
+# 4.4修复了这个bug，升级以后可以去掉这个workaround
 var Texts: Array
 
 func _ready() -> void:

@@ -1,5 +1,6 @@
 namespace RingEngine.Core.Script;
 
+using System;
 using RingEngine.Core.General;
 using RingEngine.Core.Storage;
 
@@ -38,12 +39,20 @@ public class ScriptModule
     public void Step(ref int index, VNRuntime runtime)
     {
         var @continue = false;
-        do
+        try
         {
-            @continue = script.segments[index].Continue;
-            script.segments[index].Execute(runtime);
-            index++;
-        } while (@continue && index < Length);
+            do
+            {
+                @continue = script.segments[index].Continue;
+                script.segments[index].Execute(runtime);
+                index++;
+            } while (@continue && index < Length);
+        }
+        catch (Exception e)
+        {
+            Logger.Log($"Error at block {index} {script.segments[index]}: {e.Message}");
+            throw;
+        }
     }
 
     public string Serialize()

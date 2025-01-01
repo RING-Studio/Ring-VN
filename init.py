@@ -20,8 +20,10 @@ nearright = Placement(900.0, 300.0, 1.0)
 # Effects
 transparent = SetAlpha.Transparent
 opaque = SetAlpha.Opaque
-dissolve = OpacityEffect.Dissolve(1.0)
-fade = OpacityEffect.Fade(1.0)
+Dissolve = OpacityEffect.Dissolve
+Fade = OpacityEffect.Fade
+dissolve = Dissolve(0.8)
+fade = Fade(0.8)
 
 # Transition
 dissolveTrans = DissolveTrans()
