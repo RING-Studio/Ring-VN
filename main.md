@@ -42,9 +42,17 @@ show<img src="assets/立绘1-叹气.png" alt="立绘1-叹气" style="zoom:10%;" 
 
 ？？："人可能会对它抱有期许，认为它有强大的力量足以改变很多东西。"
 
+**label3**
+
 ？？："然而当他们真的认识到个中含义时，那东西早已被燃尽，灰烬都找不见了。"
 
 hide royu with fade
+
+```python
+# TODO 这两句中间要点一下，之后要提供一个调整是否continue的方法
+```
+
+
 
 changeBG <img src="assets/black.png" alt="black" style="zoom:25%;" />with dissolve
 

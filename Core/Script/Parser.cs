@@ -5,28 +5,14 @@ using System.Collections.Generic;
 using System.Linq;
 using Sprache;
 using static RingEngine.Core.Script.Branch;
-
-public class ParserException : Exception
-{
-    private const int MaxLength = 50;
-
-    public ParserException(string source)
-        : base(source[..Math.Min(source.Length, MaxLength)]) { }
-
-    public ParserException(string source, int line)
-        : base($"Syntax Error at line {line}: \"{source[..Math.Min(source.Length, MaxLength)]}\"")
-    { }
-
-    public ParserException(Exception inner, int line)
-        : base($"Syntax Error at line {line}: \"{inner.Message}\"") { }
-}
+using static RingEngine.Core.General.AssertWrapper;
 
 /// <summary>
 /// 占位符，用来让Parser跳过空白，直接丢弃即可
 /// </summary>
 internal class DummyBlock : IScriptBlock, IEquatable<DummyBlock>
 {
-    public override void Execute(VNRuntime runtime) => throw new NotImplementedException();
+    public override void Execute(VNRuntime runtime) => Unreachable("Dummy block should not present in actual script.");
 
     // 一堆方便比较的方法
     public override bool Equals(object obj) => this.Equals(obj as DummyBlock);
@@ -119,29 +105,23 @@ public static class Parser
     public static readonly Parser<IEnumerable<IScriptBlock>> ScriptParser = ScriptBlockParser
         .Or(Parse.WhiteSpace.AtLeastOnce().Return(new DummyBlock()))
         .Or(Parse.LineEnd.Return(new DummyBlock()))
-        .Many();
+        .Many()
+        .End();
 
     public static List<IScriptBlock> _Parse(string source)
     {
-        try
-        {
-            var blocks = ScriptParser.Parse(source).Where(item => item is not DummyBlock).ToList();
-            //var labels = new Dictionary<string, int>();
+        var blocks = ScriptParser.Parse(source).Where(item => item is not DummyBlock).ToList();
+        //var labels = new Dictionary<string, int>();
 
-            //for (var i = 0; i < blocks.Count; i++)
-            //{
-            //    if (blocks[i] is Label label)
-            //    {
-            //        labels[label.Name] = i;
-            //    }
-            //}
+        //for (var i = 0; i < blocks.Count; i++)
+        //{
+        //    if (blocks[i] is Label label)
+        //    {
+        //        labels[label.Name] = i;
+        //    }
+        //}
 
-            return blocks;
-        }
-        catch (ParseException ex)
-        {
-            throw new ParserException(ex.Message);
-        }
+        return blocks;
     }
 }
 

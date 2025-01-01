@@ -4,6 +4,7 @@ var Callback: Callable
 # C#到GDScript的string类型转换有bug，不能用Array[String]
 # 4.4修复了这个bug，升级以后可以去掉这个workaround
 var Texts: Array
+var Labels: Array
 
 func _ready() -> void:
 	for child in $MarginContainer/HBoxContainer.get_children():
@@ -15,7 +16,7 @@ func _ready() -> void:
 		$MarginContainer/HBoxContainer.add_child(tab)
 
 func choose(index: int, text := ""):
-	Callback.call(index, text)
+	Callback.call(index, text, Labels[Texts.find(text)])
 	#TODO: 选项卡消失动画
 	if self.get_parent():
 		self.get_parent().remove_child(self)

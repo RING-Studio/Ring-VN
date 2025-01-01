@@ -48,9 +48,9 @@ public class ScriptModule
                 index++;
             } while (@continue && index < Length);
         }
-        catch (Exception e)
+        catch (Exception)
         {
-            Logger.Log($"Error at block {index} {script.segments[index]}: {e.Message}");
+            Logger.Log($"Error at block {index} {script.segments[index]}");
             throw;
         }
     }

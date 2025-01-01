@@ -27,7 +27,8 @@ public class RingScript
         }
         catch (Exception ex)
         {
-            Logger.Error(ex.Message);
+            LogException(ex);
+            throw;
         }
         Logger.Log($"Script Loaded: {ScriptPath}, block number: {segments.Count}");
     }
@@ -100,12 +101,12 @@ public class JumpToLabel : IScriptBlock
         {
             if (runtime.Script.script.segments[i] is Label label && label.Name == LabelName)
             {
-                // Execute结束后会PC++，所以这里要减1
-                // 其实可以不减，因为Label不做操作
-                runtime.Storage.Global.PC = i - 1;
+                // Label不做操作，可以安全跳过
+                runtime.Storage.Global.PC = i;
                 return;
             }
         }
+        Throw(new KeyNotFoundException($"Label {LabelName} not found."));
     }
 }
 
@@ -136,15 +137,15 @@ public class Branch : IScriptBlock
         switch (Type)
         {
             case BranchType.Vertical:
-                throw new NotImplementedException();
+                NotImplemented();
                 break;
             case BranchType.Horizontal:
                 runtime.UI.DisplayBranch(Options);
                 break;
             default:
-                throw new UnreachableException();
+                NotImplemented();
+                break;
         }
-        //TODO: 停止脚本执行，等待branch回调
         runtime.Paused = true;
     }
 }

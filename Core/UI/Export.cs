@@ -56,14 +56,19 @@ public class UIModule
     {
         var branchRoot = SceneTreeProxy.BranchScene.Instantiate<Control>();
         branchRoot.Name = "Branch";
-        branchRoot.Set("Callback", Callable.From<int, string>(BranchCallBack));
+        branchRoot.Set("Callback", Callable.From<int, string, string>(BranchCallBack));
         branchRoot.Set("Texts", new Array<string>(options.Select((option) => option.Text)));
+        branchRoot.Set("Labels", new Array<string>(options.Select((option) => option.Label)));
         SceneTreeProxy.UIRoot.AddChild(branchRoot);
     }
 
-    public void BranchCallBack(int index, string text)
+    public void BranchCallBack(int index, string text, string label)
     {
         runtime.Paused = false;
-        Logger.Log($"BranchCallBack {index} {text}");
+        Logger.Log($"BranchCallBack {index} {text} {label}");
+        // 这里index不会自动加1，但是Label是空操作所以下次调用Step会自动过，没有影响
+        new JumpToLabel(label).Execute(runtime);
+        // 选择后应当是continue的
+        runtime.Step();
     }
 }
