@@ -31,7 +31,8 @@ public class VNRuntime
         Script = new ScriptModule(this, "res://main.md", "res://init.py");
         UI = new UIModule()
         {
-            runtime = this
+            runtime = this,
+            Theme = new DefaultTheme()
         };
         Stage = new StageModule();
         Storage = new StorageModule();

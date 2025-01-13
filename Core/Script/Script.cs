@@ -336,7 +336,7 @@ public class UIAnim : IScriptBlock
     {
         runtime.Animation.mainBuffer.Append(
             new EffectGroupBuilder()
-                .Add(runtime.Script.interpreter.Eval<IEffect>(Effect).Bind(runtime.UI.Root))
+                .Add(runtime.Script.interpreter.Eval<IEffect>(Effect).Bind(runtime.UI.Theme.Root))
                 .Build()
         );
     }
@@ -357,12 +357,12 @@ public class ShowChapterName : IScriptBlock
         var effects = new EffectGroupBuilder();
         effects.Add(() =>
         {
-            runtime.UI.ChapterName = ChapterName;
-            runtime.UI.ChapterNameAlpha = 0;
+            runtime.UI.DefaultTheme.ChapterName = ChapterName;
+            runtime.UI.DefaultTheme.ChapterNameAlpha = 0;
         });
-        effects.Add(OpacityEffect.Dissolve().Bind(runtime.UI.ChapterNameBack));
+        effects.Add(OpacityEffect.Dissolve().Bind(runtime.UI.DefaultTheme.ChapterNameBack));
         effects.Add(new Delay(2.0));
-        effects.Add(OpacityEffect.Fade().Bind(runtime.UI.ChapterNameBack));
+        effects.Add(OpacityEffect.Fade().Bind(runtime.UI.DefaultTheme.ChapterNameBack));
         runtime.Animation.nonBlockingBuffer.Append(effects.Build());
     }
 
@@ -386,12 +386,12 @@ public class Say : IScriptBlock
         var effects = new EffectGroupBuilder();
         effects.Add(() =>
         {
-            UI.TextBox.VisibleRatio = 0;
-            UI.CharacterSay(Name, Content);
+            UI.DefaultTheme.TextBox.VisibleRatio = 0;
+            UI.DefaultTheme.CharacterSay(Name, Content);
         });
         effects.Add(
             new MethodInterpolation<float>(
-                UI.TextBoxVisibleRatio,
+                UI.DefaultTheme.TextBoxVisibleRatio,
                 0,
                 1,
                 Content.Length / runtime.Storage.Config.TextSpeed

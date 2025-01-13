@@ -6,50 +6,23 @@ using Godot;
 using Godot.Collections;
 using RingEngine.Core.General;
 using RingEngine.Core.Script;
+using static RingEngine.Core.General.AssertWrapper;
 
 public class UIModule
 {
     public VNRuntime runtime;
-    public Control Root => SceneTreeProxy.UIRoot;
-    public RichTextLabel TextBox => SceneTreeProxy.TextBox;
-    public RichTextLabel CharacterNameBox => SceneTreeProxy.CharacterNameBox;
-    public RichTextLabel ChapterNameBox => SceneTreeProxy.ChapterNameBox;
-    public TextureRect ChapterNameBack => SceneTreeProxy.ChapterNameBack;
-    public string CharacterName
+    public UITheme Theme;
+    public DefaultTheme DefaultTheme
     {
-        get => CharacterNameBox.Text.Trim(['【', '】']);
-        set
+        get
         {
-            if (string.IsNullOrEmpty(value.TrimStart()))
+            if (Theme is DefaultTheme defaultTheme)
             {
-                CharacterNameBox.Text = "";
+                return defaultTheme;
             }
-            else
-            {
-                CharacterNameBox.Text = "【" + value + "】";
-            }
+            Unreachable("Theme is not DefaultTheme.");
+            return null;
         }
-    }
-    public string ChapterName
-    {
-        get => ChapterNameBox.Text;
-        set => ChapterNameBox.Text = value;
-    }
-    public float ChapterNameAlpha
-    {
-        get => ChapterNameBack.Alpha();
-        set => ChapterNameBack.Alpha().Set(value);
-    }
-
-    public void CharacterSay(string name, string content)
-    {
-        CharacterName = name;
-        TextBox.Text = content;
-    }
-
-    public void TextBoxVisibleRatio(float visibleRatio)
-    {
-        TextBox.VisibleRatio = visibleRatio;
     }
 
     public void DisplayBranch(IEnumerable<Branch.BranchOption> options)
@@ -70,5 +43,58 @@ public class UIModule
         new JumpToLabel(label).Execute(runtime);
         // 选择后应当是continue的
         runtime.Step();
+    }
+}
+
+public abstract class UITheme
+{
+    public abstract PathSTD ScenePath { get; }
+    public Control Root => SceneTreeProxy.ThemeRoot;
+    public abstract void CharacterSay(string name, string content);
+}
+
+public class DefaultTheme : UITheme
+{
+    public override PathSTD ScenePath => "res://scenes/DefaultTheme.tscn";
+    public RichTextLabel TextBox => Root.GetNode<RichTextLabel>("./TextBoxBack/MarginContainer/MarginContainer/TextBox");
+    public RichTextLabel CharacterNameBox => Root.GetNode<RichTextLabel>("./TextBoxBack/MarginContainer/MarginContainer2/TextBox");
+    public RichTextLabel ChapterNameBox => Root.GetNode<RichTextLabel>("./ChapterNameBack/ChapterName");
+    public TextureRect ChapterNameBack => Root.GetNode<TextureRect>("./ChapterNameBack");
+    public string CharacterName
+    {
+        get => CharacterNameBox.Text.Trim(['【', '】']);
+        set
+        {
+            if (string.IsNullOrEmpty(value.TrimStart()))
+            {
+                CharacterNameBox.Text = "";
+            }
+            else
+            {
+                CharacterNameBox.Text = "【" + value + "】";
+            }
+        }
+    }
+
+    public override void CharacterSay(string name, string content)
+    {
+        CharacterName = name;
+        TextBox.Text = content;
+    }
+
+    public void TextBoxVisibleRatio(float visibleRatio)
+    {
+        TextBox.VisibleRatio = visibleRatio;
+    }
+
+    public string ChapterName
+    {
+        get => ChapterNameBox.Text;
+        set => ChapterNameBox.Text = value;
+    }
+    public float ChapterNameAlpha
+    {
+        get => ChapterNameBack.Alpha();
+        set => ChapterNameBack.Alpha().Set(value);
     }
 }

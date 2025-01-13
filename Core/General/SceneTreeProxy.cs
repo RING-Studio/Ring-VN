@@ -27,13 +27,7 @@ public class SceneTreeProxy
 
     // UI Part
     public static Control UIRoot => RuntimeRoot.GetNode<Control>("UI");
-    public static TextureRect ChapterNameBack => UIRoot.GetNode<TextureRect>("./ChapterNameBack");
-    public static RichTextLabel ChapterNameBox =>
-        UIRoot.GetNode<RichTextLabel>("./ChapterNameBack/ChapterName");
-    public static RichTextLabel TextBox =>
-        UIRoot.GetNode<RichTextLabel>("./TextBoxBack/MarginContainer/MarginContainer/TextBox");
-    public static RichTextLabel CharacterNameBox =>
-        UIRoot.GetNode<RichTextLabel>("./TextBoxBack/MarginContainer/MarginContainer2/TextBox");
+    public static Control ThemeRoot => UIRoot.GetNode<Control>("Theme");
 
     // Branch Part
     const string BranchPath = "res://scenes/Branch.tscn";
