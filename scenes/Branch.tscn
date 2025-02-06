@@ -1,8 +1,8 @@
 [gd_scene load_steps=4 format=3 uid="uid://bxhjyawr3m2kg"]
 
 [ext_resource type="Script" path="res://scenes/ChooseTable.gd" id="1_japjw"]
-[ext_resource type="Script" uid="uid://dp8o7qpx76fqp" path="res://scenes/ChooseTab.gd" id="2_iqrnc"]
-[ext_resource type="Texture2D" uid="uid://dm443rl0l4745" path="res://button/1208.png" id="3_fak85"]
+[ext_resource type="Script" path="res://scenes/ChooseTab.gd" id="2_iqrnc"]
+[ext_resource type="Texture2D" uid="uid://cod70j7akpbqs" path="res://button/1208.png" id="3_fak85"]
 
 [node name="ChooseTable" type="Control"]
 layout_mode = 3

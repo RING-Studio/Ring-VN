@@ -1,0 +1,51 @@
+[gd_scene load_steps=6 format=3 uid="uid://c8jpw0u21mvwk"]
+
+[ext_resource type="Texture2D" uid="uid://c06w8e6r2vnjr" path="res://assets/Runtime/GUI/45c4136c459070fcc785a48be4510822a39abb84.jpg" id="1_bjxlr"]
+[ext_resource type="Script" path="res://scenes/phone_message.gd" id="1_jw6j1"]
+[ext_resource type="Shader" path="res://scenes/CircleMask.gdshader" id="3_f13dg"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_a787b"]
+shader = ExtResource("3_f13dg")
+shader_parameter/mask_radius = 1.0
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_cuiiv"]
+bg_color = Color(1, 1, 1, 1)
+corner_radius_top_left = 50
+corner_radius_top_right = 50
+corner_radius_bottom_right = 50
+corner_radius_bottom_left = 50
+
+[node name="Root" type="Control"]
+custom_minimum_size = Vector2(768, 171)
+layout_mode = 3
+anchors_preset = 0
+offset_right = 469.0
+offset_bottom = 109.0
+script = ExtResource("1_jw6j1")
+MessageSender = "Other"
+
+[node name="Head" type="Sprite2D" parent="."]
+material = SubResource("ShaderMaterial_a787b")
+position = Vector2(10, 10)
+scale = Vector2(0.3, 0.3)
+texture = ExtResource("1_bjxlr")
+centered = false
+
+[node name="Text" type="Label" parent="."]
+layout_mode = 0
+offset_left = 150.0
+offset_top = 20.0
+offset_right = 419.0
+offset_bottom = 89.0
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+theme_override_font_sizes/font_size = 50
+text = "测试消息😀"
+
+[node name="Back" type="PanelContainer" parent="Text"]
+show_behind_parent = true
+layout_mode = 0
+offset_left = -40.0
+offset_top = -20.0
+offset_right = 309.0
+offset_bottom = 89.0
+theme_override_styles/panel = SubResource("StyleBoxFlat_cuiiv")

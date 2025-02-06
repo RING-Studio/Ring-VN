@@ -17,7 +17,7 @@ func game_start():
 	tween.tween_interval(0.5)
 	tween.tween_callback(func():
 		#RingIO.StartVNRuntime()
-		
+
 		)
 	tween.tween_property($Black, "modulate:a", 0.0, 1.0)
 	tween.tween_callback(func():
@@ -40,7 +40,7 @@ func load_tetromino():
 	$Runtime.process_mode = Node.PROCESS_MODE_DISABLED
 	$Runtime.visible = false
 	add_child(tetromino)
-	
+
 func end_tetromino():
 	$Tetromino.queue_free()
 	$Runtime.process_mode = Node.PROCESS_MODE_INHERIT
