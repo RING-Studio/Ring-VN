@@ -2,8 +2,9 @@ namespace RingEngine.Core;
 
 using System;
 using System.Linq;
-using Animation;
+using System.Threading.Tasks;
 using Audio;
+using RingEngine.Core.Animation2;
 using RingEngine.Core.General;
 using Script;
 using Stage;
@@ -23,8 +24,8 @@ public class VNRuntime
     public UIModule UI;
     public StageModule Stage;
     public StorageModule Storage;
-    public AnimationModule Animation;
     public AudioModule Audio;
+    public Task CurrentTask = null;
 
     public VNRuntime()
     {
@@ -36,7 +37,6 @@ public class VNRuntime
         };
         Stage = new StageModule();
         Storage = new StorageModule();
-        Animation = new AnimationModule();
         Audio = new AudioModule();
     }
 
@@ -59,6 +59,12 @@ public class VNRuntime
         Storage.Global.History = snapshot.History.ToList();
     }
 
+    public bool GetNextScriptBlock(out Task task)
+    {
+        throw new NotImplementedException();
+
+    }
+
     /// <summary>
     /// 运行脚本至下一个中断点
     /// </summary>
@@ -69,24 +75,24 @@ public class VNRuntime
             Logger.Log("Runtime is paused, no stepping.");
             return;
         }
-        if (Animation.nonBlockingBuffer.IsRunning)
+        // 如果当前没有任务或者任务已经完成，那么就执行到下一个保存点
+        if (CurrentTask == null || CurrentTask.IsCompleted)
         {
-            Animation.nonBlockingBuffer.Interrupt();
+            if (Storage.Global.PC < Script.Length)
+            {
+                // 脚本执行前是稳态，所有动画都已结束，在这里进行Snapshot
+                Storage.Global.History.Add(new Snapshot(this));
+                CurrentTask = Script.Step(this);
+            }
+            else
+            {
+                Logger.Error("Script Out of Bound!");
+            }
         }
-        if (Animation.mainBuffer.IsRunning)
+        // 动画进行中调用Step会刷新当前正在运行的步骤
+        else if (CurrentTask != null && !CurrentTask.IsCompleted)
         {
-            Animation.mainBuffer.Interrupt();
-            return;
-        }
-        if (Storage.Global.PC < Script.Length)
-        {
-            // 脚本执行前是稳态，所有动画都已结束，在这里进行Snapshot
-            Storage.Global.History.Add(new Snapshot(this));
-            Script.Step(ref Storage.Global.PC, this);
-        }
-        else
-        {
-            Logger.Error("Script Out of Bound!");
+            TweenManager.Flush();
         }
     }
 

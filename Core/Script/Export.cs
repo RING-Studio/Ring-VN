@@ -1,6 +1,7 @@
 namespace RingEngine.Core.Script;
 
 using System;
+using System.Threading.Tasks;
 using RingEngine.Core.General;
 using RingEngine.Core.Storage;
 
@@ -36,21 +37,22 @@ public class ScriptModule
     /// </summary>
     /// <param name="index">下一条需要执行的语句</param>
     /// <param name="runtime"></param>
-    public void Step(ref int index, VNRuntime runtime)
+    public async Task Step(VNRuntime runtime)
     {
+        var Global = runtime.Storage.Global;
         var @continue = false;
         try
         {
             do
             {
-                @continue = script.segments[index].Continue;
-                script.segments[index].Execute(runtime);
-                index++;
-            } while (@continue && index < Length);
+                @continue = script.segments[Global.PC].Continue;
+                await script.segments[Global.PC].Execute(runtime);
+                Global.PC++;
+            } while (@continue && Global.PC < Length);
         }
         catch (Exception)
         {
-            Logger.Log($"Error at block {index} {script.segments[index]}");
+            Logger.Log($"Error at block {Global.PC} {script.segments[Global.PC]}");
             throw;
         }
     }

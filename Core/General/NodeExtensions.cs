@@ -2,8 +2,9 @@ namespace RingEngine.Core.General;
 
 using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using Godot;
-using RingEngine.Core.Animation;
+using RingEngine.Core.Animation2;
 
 public class AlphaProxy
 {
@@ -82,6 +83,8 @@ public static class NodeExtensions
         node.GetParent()?.RemoveChild(node);
         node.QueueFree();
     }
+
+    public static Task Apply(this Node node, IEffect effect) => effect.Apply(node);
 }
 
 public static class CanvasItemExtensions

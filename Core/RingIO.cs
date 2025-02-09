@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using Godot;
 using RingEngine.Core;
+using RingEngine.Core.Animation2;
 using RingEngine.Core.General;
 using RingEngine.Core.Storage;
 
@@ -28,9 +29,9 @@ public partial class RingIO : Node
     /// <param name="then">清理动画后需要做的事</param>
     public void FlushAllAnimation(Callable then)
     {
-        if (Runtime.Animation.HasPendingAnimation)
+        if (!TweenManager.IsEmpty())
         {
-            Runtime.Animation.Flush();
+            TweenManager.Flush();
             Callbacks.Enqueue(Callable.From(() => FlushAllAnimation(then)));
         }
         else
@@ -55,8 +56,6 @@ public partial class RingIO : Node
             var callback = Callbacks.Dequeue();
             callback.Call();
         }
-
-        Runtime?.Animation.Execute();
     }
 
     public override void _Input(InputEvent @event)

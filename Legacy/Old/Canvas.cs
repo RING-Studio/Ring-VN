@@ -1,11 +1,8 @@
 namespace RingEngine.EAL.Old;
 
-using System;
 using System.Collections.Generic;
-using System.Diagnostics;
-using System.IO;
 using Godot;
-using RingEngine.Core.Animation;
+using RingEngine.Core.General;
 
 public partial class Canvas : Node2D
 {

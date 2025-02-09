@@ -6,13 +6,18 @@ using System.Linq;
 using Sprache;
 using static RingEngine.Core.Script.Branch;
 using static RingEngine.Core.General.AssertWrapper;
+using System.Threading.Tasks;
 
 /// <summary>
 /// 占位符，用来让Parser跳过空白，直接丢弃即可
 /// </summary>
 internal class DummyBlock : IScriptBlock, IEquatable<DummyBlock>
 {
-    public override void Execute(VNRuntime runtime) => Unreachable("Dummy block should not present in actual script.");
+    public override Task Execute(VNRuntime runtime)
+    {
+        Unreachable("Dummy block should not present in actual script.");
+        return Task.CompletedTask;
+    }
 
     // 一堆方便比较的方法
     public override bool Equals(object obj) => this.Equals(obj as DummyBlock);
@@ -40,7 +45,7 @@ public static class Parser
         // Markdown只支持四级标题，超过四个#怎么处理？
         from leading in Parse.Char('#').AtLeastOnce()
         from whitespace in Parse.WhiteSpace.AtLeastOnce()
-        // Except(Parse.LineEnd)会吃掉换行符
+            // Except(Parse.LineEnd)会吃掉换行符
         from name in Parse.AnyChar.Except(Parse.LineEnd).Many().Text().Token()
         select new ShowChapterName(name);
 

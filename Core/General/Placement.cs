@@ -1,4 +1,4 @@
-namespace RingEngine.Core.Animation;
+namespace RingEngine.Core.General;
 
 using System;
 using System.Collections.Generic;

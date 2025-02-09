@@ -12,7 +12,7 @@ public static class Logger
         GD.Print($"[Log] {message}");
     }
 
-    public static void Warning(string message)
+    public static void Warn(string message)
     {
         GD.Print($"[Warning] {message}");
     }

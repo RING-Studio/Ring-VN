@@ -2,7 +2,8 @@ import clr
 clr.AddReference("RingEngine")
 
 from RingEngine.Core import *
-from RingEngine.Core.Animation import *
+from RingEngine.Core.General import *
+from RingEngine.Core.Animation2 import *
 from RingEngine.Core.Script import *
 from RingEngine.Core.Storage import *
 
@@ -26,4 +27,4 @@ dissolve = Dissolve(0.8)
 fade = Fade(0.8)
 
 # Transition
-dissolveTrans = DissolveTrans()
+#dissolveTrans = DissolveTrans()
