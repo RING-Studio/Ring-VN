@@ -6,7 +6,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Godot;
 using Python.Runtime;
-using RingEngine.Core.Animation2;
+using RingEngine.Core.Animation;
 using RingEngine.Core.General;
 using RingEngine.Core.Stage;
 using static RingEngine.Core.General.AssertWrapper;

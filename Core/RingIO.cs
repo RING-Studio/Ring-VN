@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using Godot;
 using RingEngine.Core;
-using RingEngine.Core.Animation2;
+using RingEngine.Core.Animation;
 using RingEngine.Core.General;
 using RingEngine.Core.Storage;
 

@@ -3,7 +3,7 @@ clr.AddReference("RingEngine")
 
 from RingEngine.Core import *
 from RingEngine.Core.General import *
-from RingEngine.Core.Animation2 import *
+from RingEngine.Core.Animation import *
 from RingEngine.Core.Script import *
 from RingEngine.Core.Storage import *
 

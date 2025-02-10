@@ -1,69 +1,70 @@
-namespace RingEngine.Core.Animation;
+namespace RingEngine.Legacy;
 
 using System.Collections.Generic;
 using System.Linq;
 using Godot;
+using RingEngine.Core;
 using RingEngine.Core.General;
 using RingEngine.Core.Stage;
 
 /// <summary>
 /// 需要全局信息的效果
 /// </summary>
-public interface ITransition
-{
-    /// <summary>
-    /// 构建转场效果
-    /// </summary>
-    /// <param name="runtime"></param>
-    /// <param name="newBG"></param>
-    /// <returns>若干效果组，直接提交给EffectBuffer即可</returns>
-    public IEnumerable<EffectGroup> Build(VNRuntime runtime, Texture2D newBG);
+//public interface ITransition
+//{
+//    /// <summary>
+//    /// 构建转场效果
+//    /// </summary>
+//    /// <param name="runtime"></param>
+//    /// <param name="newBG"></param>
+//    /// <returns>若干效果组，直接提交给EffectBuffer即可</returns>
+//    public IEnumerable<EffectGroup> Build(VNRuntime runtime, Texture2D newBG);
 
-    /// <summary>
-    /// 获取转场的持续时间
-    /// </summary>
-    public double GetDuration();
-}
+//    /// <summary>
+//    /// 获取转场的持续时间
+//    /// </summary>
+//    public double GetDuration();
+//}
 
-public class DissolveTrans : ITransition
-{
-    public Texture2D mask;
-    public double duration;
+//public class DissolveTrans : ITransition
+//{
+//    public Texture2D mask;
+//    public double duration;
 
-    public DissolveTrans(Texture2D mask = null, double duration = 2)
-    {
-        this.mask = UniformLoader.Load<Texture2D>("res://assets/Runtime/black.png");
-        this.duration = duration;
-    }
+//    public DissolveTrans(Texture2D mask = null, double duration = 2)
+//    {
+//        this.mask = UniformLoader.Load<Texture2D>("res://assets/Runtime/black.png");
+//        this.duration = duration;
+//    }
 
-    public IEnumerable<EffectGroup> Build(VNRuntime runtime, Texture2D newBG)
-    {
-        var stage = runtime.Stage;
-        var group1 = new EffectGroupBuilder()
-            .Add(
-                new LambdaEffect(() =>
-                {
-                    stage.Mask?.Drop();
-                    stage.Mask = Canvas.AddMask("Mask", mask, Placement.BG);
-                    stage.Mask.Alpha().Set(0);
-                })
-            )
-            .Add(OpacityEffect.Dissolve(duration / 2))
-            .Add(new LambdaEffect(() => stage.Background.Texture = newBG))
-            .Add(OpacityEffect.Fade(duration / 2))
-            .Add(
-                new LambdaEffect(() =>
-                {
-                    stage.Mask.Drop();
-                    stage.Mask = null;
-                })
-            )
-            .Build(stage.Mask);
-        return new[] { group1 }.AsEnumerable();
-    }
+//    public IEnumerable<EffectGroup> Build(VNRuntime runtime, Texture2D newBG)
+//    {
+//        var stage = runtime.Stage;
+//        var group1 = new EffectGroupBuilder()
+//            .Add(
+//                new LambdaEffect(() =>
+//                {
+//                    stage.Mask?.Drop();
+//                    stage.Mask = Canvas.AddMask("Mask", mask, Placement.BG);
+//                    stage.Mask.Alpha().Set(0);
+//                })
+//            )
+//            .Add(OpacityEffect.Dissolve(duration / 2))
+//            .Add(new LambdaEffect(() => stage.Background.Texture = newBG))
+//            .Add(OpacityEffect.Fade(duration / 2))
+//            .Add(
+//                new LambdaEffect(() =>
+//                {
+//                    stage.Mask.Drop();
+//                    stage.Mask = null;
+//                })
+//            )
+//            .Build(stage.Mask);
+//        return new[] { group1 }.AsEnumerable();
+//    }
 
-    public double GetDuration() => duration;
-}
+//    public double GetDuration() => duration;
+//}
 
 //public class ImageTrans : ITransition
 //{

@@ -1,4 +1,4 @@
-namespace RingEngine.Core.Animation2;
+namespace RingEngine.Core.Animation;
 using Godot;
 using System;
 using RingEngine.Core.General;

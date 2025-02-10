@@ -4,7 +4,7 @@ using System;
 using System.Linq;
 using System.Threading.Tasks;
 using Audio;
-using RingEngine.Core.Animation2;
+using RingEngine.Core.Animation;
 using RingEngine.Core.General;
 using Script;
 using Stage;

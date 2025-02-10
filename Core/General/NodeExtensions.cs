@@ -4,7 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Godot;
-using RingEngine.Core.Animation2;
+using RingEngine.Core.Animation;
 
 public class AlphaProxy
 {
