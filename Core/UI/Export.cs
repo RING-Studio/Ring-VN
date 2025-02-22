@@ -57,12 +57,14 @@ public abstract class UITheme
     /// </summary>
     public abstract PathSTD ScenePath { get; }
     public Control Root => SceneTreeProxy.ThemeRoot;
+
     /// <summary>
     /// 所有UI样式都支持角色说话。
     /// </summary>
     /// <param name="name">显示角色名</param>
     /// <param name="content">说话内容</param>
     public abstract void CharacterSay(string name, string content);
+
     /// <summary>
     /// 调节文本框的显示比例，用于UI动画。
     /// </summary>
@@ -73,9 +75,12 @@ public abstract class UITheme
 public class DefaultTheme : UITheme
 {
     public override PathSTD ScenePath => "res://scenes/DefaultTheme.tscn";
-    public RichTextLabel TextBox => Root.GetNode<RichTextLabel>("./TextBoxBack/MarginContainer/MarginContainer/TextBox");
-    public RichTextLabel CharacterNameBox => Root.GetNode<RichTextLabel>("./TextBoxBack/MarginContainer/MarginContainer2/TextBox");
-    public RichTextLabel ChapterNameBox => Root.GetNode<RichTextLabel>("./ChapterNameBack/ChapterName");
+    public RichTextLabel TextBox =>
+        Root.GetNode<RichTextLabel>("./TextBoxBack/MarginContainer/MarginContainer/TextBox");
+    public RichTextLabel CharacterNameBox =>
+        Root.GetNode<RichTextLabel>("./TextBoxBack/MarginContainer/MarginContainer2/TextBox");
+    public RichTextLabel ChapterNameBox =>
+        Root.GetNode<RichTextLabel>("./ChapterNameBack/ChapterName");
     public TextureRect ChapterNameBack => Root.GetNode<TextureRect>("./ChapterNameBack");
     public string CharacterName
     {

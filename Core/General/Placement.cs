@@ -32,7 +32,8 @@ public class Placement : IEquatable<Placement>
     public override bool Equals(object obj) => this.Equals(obj as Placement);
 
     public bool Equals(Placement other) =>
-        other is not null && Math.Abs(this.x - other.x) < eps
+        other is not null
+        && Math.Abs(this.x - other.x) < eps
         && Math.Abs(this.y - other.y) < eps
         && Math.Abs(this.scale - other.scale) < eps;
 

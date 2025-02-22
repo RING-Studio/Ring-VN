@@ -3,10 +3,10 @@ namespace RingEngine.Core.Script;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using Sprache;
-using static RingEngine.Core.Script.Branch;
-using static RingEngine.Core.General.AssertWrapper;
 using System.Threading.Tasks;
+using Sprache;
+using static RingEngine.Core.General.AssertWrapper;
+using static RingEngine.Core.Script.Branch;
 
 /// <summary>
 /// 占位符，用来让Parser跳过空白，直接丢弃即可
@@ -45,7 +45,7 @@ public static class Parser
         // Markdown只支持四级标题，超过四个#怎么处理？
         from leading in Parse.Char('#').AtLeastOnce()
         from whitespace in Parse.WhiteSpace.AtLeastOnce()
-            // Except(Parse.LineEnd)会吃掉换行符
+        // Except(Parse.LineEnd)会吃掉换行符
         from name in Parse.AnyChar.Except(Parse.LineEnd).Many().Text().Token()
         select new ShowChapterName(name);
 
@@ -190,12 +190,11 @@ public static class BuiltInFunctionParser
         from imgOpen in Parse.String("<img src=\"")
         from path in Parse.CharExcept('"').Many().Text()
         from imgClose in Parse.AnyChar.Until(Parse.String("/>"))
-        from withEffect in (
-            from _ in Parse.String("with").Token()
-            from effect in InlineCodeBlockParser.XOr(IdentifierParser)
-            select effect
-        ).Optional()
-        select new ChangeScene(path, withEffect.GetOrDefault());
+        from withEffect in from _ in Parse.String("with").Token()
+        from effect in InlineCodeBlockParser.XOr(IdentifierParser)
+        select effect
+
+        select new ChangeScene(path, withEffect);
 
     public static readonly Parser<JumpToLabel> JumpToLabelParser =
         from _ in Parse.String("goto").Token()

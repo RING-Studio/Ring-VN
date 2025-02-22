@@ -54,17 +54,9 @@ hide royu with fade
 
 
 
-changeBG <img src="assets/black.png" alt="black" style="zoom:25%;" />with dissolve
-
-UIAnim fade
-
-:""
+changeScene <img src="assets/bg2.jpg" alt="bg2" style="zoom:15%;" /> with slide
 
 ## Chapter 1
-
-changeBG <img src="assets/bg2.jpg" alt="bg2" style="zoom:15%;" /> with dissolve
-
-UIAnim dissolve
 
 ？？？："唔…"
 ？？？："好冷…"

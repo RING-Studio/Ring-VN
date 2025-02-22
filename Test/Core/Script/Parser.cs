@@ -139,7 +139,7 @@ show <img src=""assets/chara.png"" style=""zoom:25%;"" /> as 红叶 at farleft w
         {
             new("选项1", "label1"),
             new("选项2", "label2"),
-            new("选项3", "label3")
+            new("选项3", "label3"),
         };
         foreach (var (reference, actual) in references.Zip(ret.Options))
         {
@@ -152,7 +152,9 @@ show <img src=""assets/chara.png"" style=""zoom:25%;"" /> as 红叶 at farleft w
 public class TestBuiltInParser
 {
     [TestMethod]
-    [DataRow(@"show <img src=""assets/bg2.jpg"" alt=""bg2"" style=""zoom:25%;"" /> as 红叶 at left")]
+    [DataRow(
+        @"show <img src=""assets/bg2.jpg"" alt=""bg2"" style=""zoom:25%;"" /> as 红叶 at left"
+    )]
     [DataRow(@"show<img src=""assets/bg2.jpg"" alt=""bg2"" style=""zoom:25%;"" />as 红叶 at left")]
     [DataRow(
         @"show   <img src=""assets/bg2.jpg"" alt=""bg2"" style=""zoom:25%;"" />   as 红叶 at left"
@@ -259,7 +261,7 @@ public class TestBuiltInParser
     {
         var ret = BuiltInFunctionParser.ChangeSceneParser.End().Parse(input);
         Assert.AreEqual(bgPath, ret.BGPath);
-        Assert.AreEqual(effect, ret.Effect);
+        Assert.AreEqual(effect, ret.Transition);
     }
 
     [TestMethod]

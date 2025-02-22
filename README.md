@@ -34,9 +34,7 @@ DSL 解析器，解释器，pythonnet搭建的inline code执行环境
 
 脚本的驱动部分
 
-`IEffect`定义了异步执行单元，`EffectBuffer`定义了由tween驱动的异步执行框架。
-
-- [ ] TODO: 优化异步框架的使用体验，考虑使用`Task`来实现。
+`IEffect`定义了异步执行单元，由C#的异步系统配合godot signal执行。
 
 ### Storage
 
@@ -90,7 +88,7 @@ VNRuntime场景树对C#侧提供的静态界面，硬编码了场景结构，场
 
 ## TODO List
 
-- [ ] 并行动画实现改进（用于Show）
+- [x] 并行动画实现改进（用于Show）
 
 
 

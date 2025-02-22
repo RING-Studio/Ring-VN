@@ -1,9 +1,10 @@
 namespace RingEngine.Core.Animation;
-using Godot;
+
 using System;
-using RingEngine.Core.General;
-using System.Threading.Tasks;
 using System.Linq;
+using System.Threading.Tasks;
+using Godot;
+using RingEngine.Core.General;
 
 /// <summary>
 /// 对单个节点应用的效果，不能访问其它节点，不能删除节点
@@ -24,10 +25,12 @@ public interface IEffect
 public class ChainEffect : IEffect
 {
     public IEffect[] Effects;
+
     public ChainEffect(params IEffect[] effects)
     {
         Effects = effects;
     }
+
     public async Task Apply(Node target)
     {
         foreach (var effect in Effects)
@@ -35,7 +38,8 @@ public class ChainEffect : IEffect
             await effect.Apply(target);
         }
     }
-    public double GetDuration() => Effects.Select(effect => effect.GetDuration()).Sum();
+
+    public double GetDuration() => Effects.Sum(effect => effect.GetDuration());
 }
 
 public class LambdaEffect : IEffect
@@ -93,7 +97,7 @@ public class MethodInterpolation<T> : IEffect
         Duration = duration;
     }
 
-    public async Task Apply(Node target)
+    public async Task Apply(Node target = null)
     {
         var tween = TweenManager.CreateTween();
         tween.TweenMethod(

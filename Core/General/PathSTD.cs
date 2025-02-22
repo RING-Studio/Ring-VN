@@ -56,10 +56,16 @@ public class PathSTD : IEquatable<PathSTD>
 
     // Generated
     public override bool Equals(object obj) => this.Equals(obj as PathSTD);
-    public bool Equals(PathSTD other) => other is not null && this.RelativePath == other.RelativePath;
+
+    public bool Equals(PathSTD other) =>
+        other is not null && this.RelativePath == other.RelativePath;
+
     public override int GetHashCode() => HashCode.Combine(this.RelativePath);
+
     public override string ToString() => RelativePath;
 
-    public static bool operator ==(PathSTD left, PathSTD right) => EqualityComparer<PathSTD>.Default.Equals(left, right);
+    public static bool operator ==(PathSTD left, PathSTD right) =>
+        EqualityComparer<PathSTD>.Default.Equals(left, right);
+
     public static bool operator !=(PathSTD left, PathSTD right) => !(left == right);
 }

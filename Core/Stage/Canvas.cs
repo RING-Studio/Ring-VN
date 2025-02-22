@@ -55,7 +55,7 @@ public static class Canvas
             Texture = texture,
             Position = placement.Position,
             Scale = new Vector2(placement.scale, placement.scale),
-            Centered = false
+            Centered = false,
         };
         SceneTreeProxy.Masks.AddChild(mask);
         return mask;

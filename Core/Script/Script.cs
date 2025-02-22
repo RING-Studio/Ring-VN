@@ -34,8 +34,11 @@ public class RingScript
     }
 
     // 将相对于脚本的路径转换为相对于根目录的路径
-    public PathSTD StandardizePath(string filePath) => PathSTD.From(ScriptPath.Directory) + filePath;
-    public PathSTD StandardizePath(PathSTD filePath) => PathSTD.From(ScriptPath.Directory) + filePath;
+    public PathSTD StandardizePath(string filePath) =>
+        PathSTD.From(ScriptPath.Directory) + filePath;
+
+    public PathSTD StandardizePath(PathSTD filePath) =>
+        PathSTD.From(ScriptPath.Directory) + filePath;
 }
 
 public abstract class IScriptBlock
@@ -54,11 +57,13 @@ public abstract class IScriptBlock
 public class ChangeScript : IScriptBlock
 {
     public PathSTD NewScriptPath;
+
     public ChangeScript(PathSTD path)
     {
         Continue = true;
         NewScriptPath = path;
     }
+
     public override Task Execute(VNRuntime runtime)
     {
         runtime.Script.script = new RingScript(runtime.Script.StandardizePath(NewScriptPath));
@@ -117,7 +122,7 @@ public class Branch : IScriptBlock
     public enum BranchType
     {
         Vertical,
-        Horizontal
+        Horizontal,
     }
 
     public record struct BranchOption(string Text, string Label);
@@ -224,6 +229,7 @@ public class Hide : IScriptBlock
 
     public Hide(string name, string? effect)
     {
+        Continue = true;
         Name = name;
         Effect = effect;
     }
@@ -232,7 +238,9 @@ public class Hide : IScriptBlock
     {
         if (Effect != null)
         {
-            await runtime.Stage.Characters[Name].Apply(runtime.Script.interpreter.Eval<IEffect>(Effect));
+            await runtime
+                .Stage.Characters[Name]
+                .Apply(runtime.Script.interpreter.Eval<IEffect>(Effect));
         }
         runtime.Stage.Characters.Remove(Name).Drop();
     }
@@ -281,30 +289,47 @@ public class ChangeBG : IScriptBlock
 public class ChangeScene : IScriptBlock
 {
     public PathSTD BGPath;
-    public string? Effect;
+    public string Transition;
 
-    public ChangeScene(PathSTD path, string? effect)
+    public ChangeScene(PathSTD path, string effect)
     {
-        //@continue = true;
+        Continue = true;
         BGPath = path;
-        Effect = effect;
+        Transition = effect;
     }
 
     public override async Task Execute(VNRuntime runtime)
     {
-        //var canvas = runtime.Stage;
-        //var texture = UniformLoader.Load<Texture2D>(runtime.Script.StandardizePath(BGPath));
-        //if (Effect != null)
-        //{
-        //    ITransition instance = runtime.Script.interpreter.Eval(Effect);
-        //    runtime.Animation.mainBuffer.Append(instance.Build(runtime, texture));
-        //}
-        //else
-        //{
-        //    // Legacy code，找时间删掉。
-        //    Logger.Error("changeScene没有动画，为什么不用changeBG？");
-        //    Unreachable();
-        //}
+        var canvas = runtime.Stage;
+        var newBG = UniformLoader.Load<Texture2D>(runtime.Script.StandardizePath(BGPath));
+        // 隐去UI
+        var ui = runtime.UI.Theme.Root;
+        await ui.Apply(OpacityEffect.Fade());
+        // 清空对话
+        runtime.UI.Theme.CharacterSay("", "");
+        // 隐去立绘（如果有）
+        Dictionary<string, float> prev_opacity = [];
+        List<Task> fade_tweens = [];
+        foreach (var character in canvas.Characters)
+        {
+            prev_opacity.Add(character.Name, character.Modulate.A);
+            fade_tweens.Add(character.Apply(OpacityEffect.Fade()));
+        }
+        await Task.WhenAll(fade_tweens);
+        // 进行转场
+        BGTransition instance = runtime.Script.interpreter.Eval(Transition);
+        await instance.SetNewBG(newBG).Run(runtime);
+        // 重新显示立绘（如果有）
+        List<Task> dissolve_tweens = [];
+        foreach (var character in canvas.Characters)
+        {
+            dissolve_tweens.Add(
+                character.Apply(new OpacityEffect(prev_opacity[character.Name], 1.0))
+            );
+        }
+        await Task.WhenAll(dissolve_tweens);
+        // 显示UI
+        await ui.Apply(OpacityEffect.Dissolve());
     }
 }
 
@@ -340,10 +365,8 @@ public class ShowChapterName : IScriptBlock
         runtime.UI.DefaultTheme.ChapterName = ChapterName;
         runtime.UI.DefaultTheme.ChapterNameAlpha = 0;
         _ = runtime.UI.DefaultTheme.ChapterNameBack.Apply(
-            new ChainEffect(
-            OpacityEffect.Dissolve(),
-            new Delay(2.0),
-            OpacityEffect.Fade()));
+            new ChainEffect(OpacityEffect.Dissolve(), new Delay(2.0), OpacityEffect.Fade())
+        );
         return Task.CompletedTask;
     }
 
@@ -367,11 +390,11 @@ public class Say : IScriptBlock
         UI.DefaultTheme.TextBox.VisibleRatio = 0;
         UI.DefaultTheme.CharacterSay(Name, Content);
         await new MethodInterpolation<float>(
-                UI.DefaultTheme.TextBoxVisibleRatio,
-                0,
-                1,
-                Content.Length / runtime.Storage.Config.TextSpeed
-            ).Apply(null);
+            UI.DefaultTheme.TextBoxVisibleRatio,
+            0,
+            1,
+            Content.Length / runtime.Storage.Config.TextSpeed
+        ).Apply();
     }
 
     public override string ToString() => $"Say: name: {Name}, content: {Content}";

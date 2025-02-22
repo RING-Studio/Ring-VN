@@ -1,9 +1,9 @@
 namespace RingEngine.Core.Stage;
 
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using Godot;
-using RingEngine.Core.Animation;
 using RingEngine.Core.General;
 using static RingEngine.Core.General.AssertWrapper;
 
@@ -53,14 +53,9 @@ public class OldCharactersProxy
     public Sprite2D Remove(string name) => Characters.Remove(name + suffix);
 }
 
-public class Characters
+public class Characters : IEnumerable<Sprite2D>
 {
     Dictionary<string, Sprite2D> _Characters = [];
-
-    /// <summary>
-    /// 角色渲染的前后关系，靠后的角色显示在上层。
-    /// </summary>
-    List<string> RenderOrder = [];
 
     public Sprite2D this[string name] => _Characters[name];
 
@@ -92,7 +87,6 @@ public class Characters
     {
         Assert(!_Characters.ContainsKey(name));
         _Characters[name] = character;
-        RenderOrder.Add(name);
     }
 
     public Sprite2D Remove(string name)
@@ -100,9 +94,18 @@ public class Characters
         Assert(this.Has(name));
         var ret = _Characters[name];
         _Characters.Remove(name);
-        RenderOrder.Remove(name);
         return ret;
     }
+
+    public IEnumerator<Sprite2D> GetEnumerator()
+    {
+        foreach (var (_, character) in _Characters)
+        {
+            yield return character;
+        }
+    }
+
+    IEnumerator IEnumerable.GetEnumerator() => this.GetEnumerator();
 }
 
 public class Camera { }

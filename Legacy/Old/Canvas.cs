@@ -43,7 +43,7 @@ public partial class Canvas : Node2D
             ZIndex = -1,
             Centered = false,
             Position = Placement.BG.Position,
-            Scale = new Vector2(Placement.BG.scale, Placement.BG.scale)
+            Scale = new Vector2(Placement.BG.scale, Placement.BG.scale),
         };
         AddChild(BG);
         BG.Owner = this;

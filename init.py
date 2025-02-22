@@ -27,4 +27,5 @@ dissolve = Dissolve(0.8)
 fade = Fade(0.8)
 
 # Transition
-#dissolveTrans = DissolveTrans()
+dissolveTrans = DissolveTrans()
+slide = ImageTrans()

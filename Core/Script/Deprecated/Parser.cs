@@ -206,17 +206,16 @@ public static class Parser
 public static class BuiltInFunctionParser
 {
     delegate ParseResult Parser(string source);
-    static readonly Dictionary<string, Parser> Parsers =
-        new()
-        {
-            { "show", ParseShow },
-            { "hide", ParseHide },
-            { "changeBG", ParseChangeBG },
-            { "changeScene", ParseChangeScene },
-            { "goto", ParseJumpToLabel },
-            { "UIAnim", ParseUIAnim },
-            { "stopAudio", ParseStopAudio },
-        };
+    static readonly Dictionary<string, Parser> Parsers = new()
+    {
+        { "show", ParseShow },
+        { "hide", ParseHide },
+        { "changeBG", ParseChangeBG },
+        { "changeScene", ParseChangeScene },
+        { "goto", ParseJumpToLabel },
+        { "UIAnim", ParseUIAnim },
+        { "stopAudio", ParseStopAudio },
+    };
 
     public static ParseResult Parse(string source)
     {
@@ -249,7 +248,7 @@ public static class BuiltInFunctionParser
                     match.Groups["pos"].Value,
                     effect,
                     match.Groups["name"].Value
-                )
+                ),
             ]
         );
     }

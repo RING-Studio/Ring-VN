@@ -30,11 +30,7 @@ public class VNRuntime
     public VNRuntime()
     {
         Script = new ScriptModule(this, "res://main.md", "res://init.py");
-        UI = new UIModule()
-        {
-            runtime = this,
-            Theme = new DefaultTheme()
-        };
+        UI = new UIModule() { runtime = this, Theme = new DefaultTheme() };
         Stage = new StageModule();
         Storage = new StorageModule();
         Audio = new AudioModule();
@@ -62,7 +58,6 @@ public class VNRuntime
     public bool GetNextScriptBlock(out Task task)
     {
         throw new NotImplementedException();
-
     }
 
     /// <summary>

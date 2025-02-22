@@ -65,11 +65,17 @@ public class ControlPlacementProxy : IEquatable<ControlPlacementProxy>
         _Node.Scale = new(value.scale, value.scale);
     }
 
-    public static bool operator ==(ControlPlacementProxy left, ControlPlacementProxy right) => EqualityComparer<ControlPlacementProxy>.Default.Equals(left, right);
-    public static bool operator !=(ControlPlacementProxy left, ControlPlacementProxy right) => !(left == right);
+    public static bool operator ==(ControlPlacementProxy left, ControlPlacementProxy right) =>
+        EqualityComparer<ControlPlacementProxy>.Default.Equals(left, right);
+
+    public static bool operator !=(ControlPlacementProxy left, ControlPlacementProxy right) =>
+        !(left == right);
 
     public override bool Equals(object obj) => this.Equals(obj as ControlPlacementProxy);
-    public bool Equals(ControlPlacementProxy other) => other is not null && EqualityComparer<Placement>.Default.Equals(this, other);
+
+    public bool Equals(ControlPlacementProxy other) =>
+        other is not null && EqualityComparer<Placement>.Default.Equals(this, other);
+
     public override int GetHashCode() => HashCode.Combine((Placement)this);
 }
 
