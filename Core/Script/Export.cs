@@ -49,7 +49,7 @@ public class ScriptModule
                 @continue = script.segments[Global.PC].Continue;
                 await script.segments[Global.PC].Execute(runtime);
                 Global.PC++;
-            } while (@continue && Global.PC < Length);
+            } while ((@continue || Global.ForceContinue) && Global.PC < Length);
         }
         catch (Exception)
         {

@@ -48,13 +48,7 @@ show<img src="assets/立绘1-叹气.png" alt="立绘1-叹气" style="zoom:10%;" 
 
 hide royu with fade
 
-```python
-# TODO 这两句中间要点一下，之后要提供一个调整是否continue的方法
-```
-
-
-
-changeScene <img src="assets/bg2.jpg" alt="bg2" style="zoom:15%;" /> with slide
+changeScene <img src="assets/bg2.jpg" alt="bg2" style="zoom:15%;" /> with <img src="assets/rule_10.png" alt="rule_10" style="zoom:25%;" />
 
 ## Chapter 1
 

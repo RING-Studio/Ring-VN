@@ -185,14 +185,21 @@ public static class BuiltInFunctionParser
         ).Optional()
         select new ChangeBG(path, withEffect.GetOrDefault());
 
+    public static readonly Parser<string> ImagePathParser =
+        from imgOpen in Parse.String("<img src=\"")
+        from path in Parse.CharExcept('"').Many().Text()
+        from imgClose in Parse.Char('"').Token().Then(_ => Parse.AnyChar.Until(Parse.String("/>")))
+        select path;
+
     public static readonly Parser<ChangeScene> ChangeSceneParser =
         from _ in Parse.String("changeScene").Token()
         from imgOpen in Parse.String("<img src=\"")
         from path in Parse.CharExcept('"').Many().Text()
         from imgClose in Parse.AnyChar.Until(Parse.String("/>"))
-        from withEffect in from _ in Parse.String("with").Token()
-        from effect in InlineCodeBlockParser.XOr(IdentifierParser)
-        select effect
+        from withEffect in
+            from _ in Parse.String("with").Token()
+            from effect in ImagePathParser.Or(InlineCodeBlockParser.XOr(IdentifierParser))
+            select effect
 
         select new ChangeScene(path, withEffect);
 
@@ -216,6 +223,11 @@ public static class BuiltInFunctionParser
         from scriptPath in Parse.Char('(').Then(_ => Parse.AnyChar.Until(Parse.Char(')')).Text())
         select new ChangeScript(scriptPath);
 
+    public static readonly Parser<SwitchFeature> SwitchFeatureParser =
+        from mode in Parse.String("enable").Or(Parse.String("disable")).Token().Text()
+        from featureName in IdentifierParser
+        select new SwitchFeature(featureName, mode == "enable");
+
     public static readonly Parser<IScriptBlock> BuiltInFunction = ShowParser
         .Or<IScriptBlock>(HideParser)
         .Or(ChangeBGParser)
@@ -223,5 +235,6 @@ public static class BuiltInFunctionParser
         .Or(JumpToLabelParser)
         .Or(UIAnimParser)
         .Or(StopAudioParser)
-        .Or(ChangeScriptParser);
+        .Or(ChangeScriptParser)
+        .Or(SwitchFeatureParser);
 }

@@ -317,7 +317,15 @@ public class ChangeScene : IScriptBlock
         }
         await Task.WhenAll(fade_tweens);
         // 进行转场
-        BGTransition instance = runtime.Script.interpreter.Eval(Transition);
+        BGTransition instance;
+        if (Transition.GetExtension().Length > 0)
+        {
+            instance = new ImageTrans(Transition);
+        }
+        else
+        {
+            instance = runtime.Script.interpreter.Eval(Transition);
+        }
         await instance.SetNewBG(newBG).Run(runtime);
         // 重新显示立绘（如果有）
         List<Task> dissolve_tweens = [];
@@ -470,6 +478,37 @@ public class StopAudio : IScriptBlock
         //        )
         //        .Build()
         //);
+    }
+}
+
+public class SwitchFeature : IScriptBlock
+{
+
+    bool Mode;
+    string FeatureName;
+
+    public SwitchFeature(string featureName, bool mode)
+    {
+        Mode = mode;
+        FeatureName = featureName;
+    }
+
+    public static SwitchFeature Enable(string featureName) => new(featureName, true);
+    public static SwitchFeature Disable(string featureName) => new(featureName, false);
+
+    public override Task Execute(VNRuntime runtime)
+    {
+        var global = runtime.Storage.Global;
+        switch (FeatureName.ToLowerInvariant())
+        {
+            case "continue" or "forcecontinue":
+                global.ForceContinue = Mode;
+                break;
+            default:
+                global.Data[FeatureName] = Mode.ToString();
+                break;
+        }
+        return Task.CompletedTask;
     }
 }
 

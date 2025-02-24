@@ -33,3 +33,7 @@ _layout: landing
 - 添加了存档支持，可以按Esc存档，存档位于snapshot文件夹下，开始游戏时按加载游戏可载入存档。
 
 - 添加了Backlog支持，按Backspace回退一步，仅支持当前运行中看过的部分。
+
+- 添加了enable Feature/disable Feature的语句，目前用于强制继续执行（连续动画）
+
+- 蒙版动画现在可以直接在changeScene的with效果中拖拽图片上去

@@ -3,6 +3,7 @@ namespace RingEngine.Core.Storage;
 using System;
 using System.Collections.Generic;
 using MessagePack;
+using RingEngine.Core.Script;
 
 [MessagePackObject(keyAsPropertyName: true)]
 public class StorageEngine
@@ -16,6 +17,11 @@ public class StorageEngine
     /// 运行时是否暂停
     /// </summary>
     public bool Paused;
+
+    /// <summary>
+    /// 连续执行模式，开启后无视<see cref="IScriptBlock.Continue"/>的值强制持续执行所有语句
+    /// </summary>
+    public bool ForceContinue;
 
     /// <summary>
     /// 其它数据，为了使python可调用需要限制类型
