@@ -11,7 +11,7 @@ using static RingEngine.Core.Script.Branch;
 /// <summary>
 /// 占位符，用来让Parser跳过空白，直接丢弃即可
 /// </summary>
-internal class DummyBlock : IScriptBlock, IEquatable<DummyBlock>
+internal class DummyBlock : ScriptBlock, IEquatable<DummyBlock>
 {
     public override Task Execute(VNRuntime runtime)
     {
@@ -98,8 +98,8 @@ public static class Parser
         from lines in BranchLineParser.Repeat(2, null)
         select new Branch(type, lines.Skip(1));
 
-    public static readonly Parser<IScriptBlock> ScriptBlockParser = CodeBlockParser
-        .Or<IScriptBlock>(ShowChapterNameParser)
+    public static readonly Parser<ScriptBlock> ScriptBlockParser = CodeBlockParser
+        .Or<ScriptBlock>(ShowChapterNameParser)
         .Or(PlayAudioParser)
         .Or(LabelParser)
         .Or(BranchParser)
@@ -107,13 +107,13 @@ public static class Parser
         // SayParser一定要放在最后，因为没有固定的prefix
         .Or(SayParser);
 
-    public static readonly Parser<IEnumerable<IScriptBlock>> ScriptParser = ScriptBlockParser
+    public static readonly Parser<IEnumerable<ScriptBlock>> ScriptParser = ScriptBlockParser
         .Or(Parse.WhiteSpace.AtLeastOnce().Return(new DummyBlock()))
         .Or(Parse.LineEnd.Return(new DummyBlock()))
         .Many()
         .End();
 
-    public static List<IScriptBlock> _Parse(string source)
+    public static List<ScriptBlock> _Parse(string source)
     {
         var blocks = ScriptParser.Parse(source).Where(item => item is not DummyBlock).ToList();
         //var labels = new Dictionary<string, int>();
@@ -228,8 +228,8 @@ public static class BuiltInFunctionParser
         from featureName in IdentifierParser
         select new SwitchFeature(featureName, mode == "enable");
 
-    public static readonly Parser<IScriptBlock> BuiltInFunction = ShowParser
-        .Or<IScriptBlock>(HideParser)
+    public static readonly Parser<ScriptBlock> BuiltInFunction = ShowParser
+        .Or<ScriptBlock>(HideParser)
         .Or(ChangeBGParser)
         .Or(ChangeSceneParser)
         .Or(JumpToLabelParser)

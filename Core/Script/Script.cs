@@ -16,7 +16,7 @@ using static RingEngine.Core.General.AssertWrapper;
 public class RingScript
 {
     public PathSTD ScriptPath;
-    public List<IScriptBlock> segments = [];
+    public List<ScriptBlock> segments = [];
 
     public RingScript(PathSTD filePath)
     {
@@ -41,7 +41,7 @@ public class RingScript
         PathSTD.From(ScriptPath.Directory) + filePath;
 }
 
-public abstract class IScriptBlock
+public abstract class ScriptBlock
 {
     /// <summary>
     /// 执行完当前语句块后是否继续执行
@@ -54,7 +54,7 @@ public abstract class IScriptBlock
     public abstract Task Execute(VNRuntime runtime);
 }
 
-public class ChangeScript : IScriptBlock
+public class ChangeScript : ScriptBlock
 {
     public PathSTD NewScriptPath;
 
@@ -74,7 +74,7 @@ public class ChangeScript : IScriptBlock
     }
 }
 
-public class Label : IScriptBlock
+public class Label : ScriptBlock
 {
     public string Name { get; set; }
 
@@ -91,7 +91,7 @@ public class Label : IScriptBlock
 /// <summary>
 /// 非条件跳转，条件跳转包含在Branch中了。
 /// </summary>
-public class JumpToLabel : IScriptBlock
+public class JumpToLabel : ScriptBlock
 {
     public string LabelName;
 
@@ -117,7 +117,7 @@ public class JumpToLabel : IScriptBlock
     }
 }
 
-public class Branch : IScriptBlock
+public class Branch : ScriptBlock
 {
     public enum BranchType
     {
@@ -159,7 +159,7 @@ public class Branch : IScriptBlock
     }
 }
 
-public class Show : IScriptBlock
+public class Show : ScriptBlock
 {
     public string ImgName;
     public PathSTD ImgPath;
@@ -222,7 +222,7 @@ public class Show : IScriptBlock
         $"show: name: {ImgName}, path: {ImgPath}, placement: {Placement}, effect: {Effect}";
 }
 
-public class Hide : IScriptBlock
+public class Hide : ScriptBlock
 {
     public string Name;
     public string? Effect;
@@ -248,7 +248,7 @@ public class Hide : IScriptBlock
     public override string ToString() => $"hide: name: {Name}, effect: {Effect}";
 }
 
-public class ChangeBG : IScriptBlock
+public class ChangeBG : ScriptBlock
 {
     public PathSTD ImgPath;
     public string? Effect;
@@ -286,7 +286,7 @@ public class ChangeBG : IScriptBlock
     public override string ToString() => $"changeBG: path: {ImgPath}, effect: {Effect}";
 }
 
-public class ChangeScene : IScriptBlock
+public class ChangeScene : ScriptBlock
 {
     public PathSTD BGPath;
     public string Transition;
@@ -332,7 +332,7 @@ public class ChangeScene : IScriptBlock
         foreach (var character in canvas.Characters)
         {
             dissolve_tweens.Add(
-                character.Apply(new OpacityEffect(prev_opacity[character.Name], 1.0))
+                character.Apply(OpacityEffect.New(prev_opacity[character.Name], 1.0))
             );
         }
         await Task.WhenAll(dissolve_tweens);
@@ -341,7 +341,7 @@ public class ChangeScene : IScriptBlock
     }
 }
 
-public class UIAnim : IScriptBlock
+public class UIAnim : ScriptBlock
 {
     public string Effect;
 
@@ -358,7 +358,7 @@ public class UIAnim : IScriptBlock
     }
 }
 
-public class ShowChapterName : IScriptBlock
+public class ShowChapterName : ScriptBlock
 {
     public string ChapterName;
 
@@ -373,7 +373,7 @@ public class ShowChapterName : IScriptBlock
         runtime.UI.DefaultTheme.ChapterName = ChapterName;
         runtime.UI.DefaultTheme.ChapterNameAlpha = 0;
         _ = runtime.UI.DefaultTheme.ChapterNameBack.Apply(
-            new ChainEffect(OpacityEffect.Dissolve(), new Delay(2.0), OpacityEffect.Fade())
+            ChainEffect.New(OpacityEffect.Dissolve(), Delay.New(2.0), OpacityEffect.Fade())
         );
         return Task.CompletedTask;
     }
@@ -381,7 +381,7 @@ public class ShowChapterName : IScriptBlock
     public override string ToString() => $"showChapterName: {ChapterName}";
 }
 
-public class Say : IScriptBlock
+public class Say : ScriptBlock
 {
     public string Name;
     public string Content;
@@ -397,7 +397,7 @@ public class Say : IScriptBlock
         var UI = runtime.UI;
         UI.DefaultTheme.TextBox.VisibleRatio = 0;
         UI.DefaultTheme.CharacterSay(Name, Content);
-        await new MethodInterpolation<float>(
+        await MethodInterpolation.New<float>(
             UI.DefaultTheme.TextBoxVisibleRatio,
             0,
             1,
@@ -408,7 +408,7 @@ public class Say : IScriptBlock
     public override string ToString() => $"Say: name: {Name}, content: {Content}";
 }
 
-public class PlayAudio : IScriptBlock
+public class PlayAudio : ScriptBlock
 {
     // path to the audio file("" excluded)
     PathSTD Path;
@@ -452,7 +452,7 @@ public class PlayAudio : IScriptBlock
     }
 }
 
-public class StopAudio : IScriptBlock
+public class StopAudio : ScriptBlock
 {
     float FadeOutTime;
 
@@ -481,7 +481,7 @@ public class StopAudio : IScriptBlock
     }
 }
 
-public class SwitchFeature : IScriptBlock
+public class SwitchFeature : ScriptBlock
 {
 
     bool Mode;
@@ -512,7 +512,7 @@ public class SwitchFeature : IScriptBlock
     }
 }
 
-public class CodeBlock : IScriptBlock
+public class CodeBlock : ScriptBlock
 {
     // language specified in markdown codeblock(unused)
     public string Identifier;

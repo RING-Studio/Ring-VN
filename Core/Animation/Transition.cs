@@ -116,7 +116,7 @@ public class ImageTrans : BGTransition
         stage.Mask.Material = material;
 
         // Mask On
-        await new MethodInterpolation<double>(
+        await MethodInterpolation.New(
             progress =>
                 ((ShaderMaterial)stage.Mask.Material).SetShaderParameter("progress", progress),
             0.0,
@@ -127,7 +127,7 @@ public class ImageTrans : BGTransition
         stage.Background.Texture = NewBG;
 
         // Mask Off
-        await new MethodInterpolation<double>(
+        await MethodInterpolation.New(
             progress =>
                 ((ShaderMaterial)stage.Mask.Material).SetShaderParameter("progress", progress),
             1.0,

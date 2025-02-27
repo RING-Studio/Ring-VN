@@ -1,7 +1,6 @@
 namespace RingEngine.Core.Animation;
 
 using System;
-using System.Linq;
 using System.Threading.Tasks;
 using Godot;
 using RingEngine.Core.General;
@@ -15,21 +14,18 @@ public interface IEffect
     /// <para>对节点应用当前效果</para>
     /// </summary>
     public Task Apply(Node target);
-
-    /// <summary>
-    /// 获取效果的持续时间
-    /// </summary>
-    public double GetDuration();
 }
 
 public class ChainEffect : IEffect
 {
     public IEffect[] Effects;
 
-    public ChainEffect(params IEffect[] effects)
+    private ChainEffect(params IEffect[] effects)
     {
         Effects = effects;
     }
+
+    public static ChainEffect New(params IEffect[] effects) => new(effects);
 
     public async Task Apply(Node target)
     {
@@ -38,47 +34,16 @@ public class ChainEffect : IEffect
             await effect.Apply(target);
         }
     }
-
-    public double GetDuration() => Effects.Sum(effect => effect.GetDuration());
 }
 
-public class LambdaEffect : IEffect
+public static class MethodInterpolation
 {
-    // 用于参数类型
-    public delegate void EffectFunc(Tween tween);
-    public delegate void CallBack();
-
-    EffectFunc Func;
-    double Duration;
-
-    public LambdaEffect(EffectFunc func, double duration = 0)
-    {
-        Func = func;
-        Duration = duration;
-    }
-
-    /// <summary>
-    /// 仅包含单个TweenCallBack的LambdaEffect
-    /// </summary>
-    /// <param name="callBack">要调用的CallBack</param>
-    /// <param name="duration">效果持续时间</param>
-    public LambdaEffect(CallBack callBack, double duration = 0)
-    {
-        Func = (tween) => tween.TweenCallback(Callable.From(() => callBack()));
-        Duration = duration;
-    }
-
-    public static LambdaEffect From(CallBack callBack, double duration = 0) =>
-        new(callBack, duration);
-
-    public async Task Apply(Node target)
-    {
-        var tween = TweenManager.CreateTween();
-        Func(tween);
-        await tween.ToSignal(tween, Tween.SignalName.Finished);
-    }
-
-    public double GetDuration() => Duration;
+    public static MethodInterpolation<T> New<T>(
+        MethodInterpolation<T>.Method func,
+        T from,
+        T to,
+        double duration
+    ) => new(func, from, to, duration);
 }
 
 public class MethodInterpolation<T> : IEffect
@@ -108,18 +73,18 @@ public class MethodInterpolation<T> : IEffect
         );
         await tween.ToSignal(tween, Tween.SignalName.Finished);
     }
-
-    public double GetDuration() => Duration;
 }
 
 public class Delay : IEffect
 {
     public double Duration;
 
-    public Delay(double duration)
+    private Delay(double duration)
     {
         Duration = duration;
     }
+
+    public static Delay New(double duration) => new(duration);
 
     public async Task Apply(Node target)
     {
@@ -127,8 +92,6 @@ public class Delay : IEffect
         tween.TweenInterval(Duration);
         await tween.ToSignal(tween, Tween.SignalName.Finished);
     }
-
-    public double GetDuration() => Duration;
 }
 
 public class SetAlpha : IEffect
@@ -138,10 +101,12 @@ public class SetAlpha : IEffect
 
     public float Alpha;
 
-    public SetAlpha(double alpha)
+    private SetAlpha(double alpha)
     {
         Alpha = (float)alpha;
     }
+
+    public static SetAlpha New(double alpha) => new(alpha);
 
     public async Task Apply(Node target)
     {
@@ -149,8 +114,6 @@ public class SetAlpha : IEffect
         tween.TweenCallback(Callable.From(() => (target as CanvasItem).Alpha().Set(Alpha)));
         await tween.ToSignal(tween, Tween.SignalName.Finished);
     }
-
-    public double GetDuration() => 0;
 }
 
 public class OpacityEffect : IEffect
@@ -162,11 +125,13 @@ public class OpacityEffect : IEffect
     public float EndAlpha;
     public double Duration;
 
-    public OpacityEffect(double endAlpha, double duration)
+    private OpacityEffect(double endAlpha, double duration)
     {
         EndAlpha = (float)endAlpha;
         Duration = duration;
     }
+
+    public static OpacityEffect New(double endAlpha, double duration) => new(endAlpha, duration);
 
     public async Task Apply(Node target)
     {
@@ -176,8 +141,6 @@ public class OpacityEffect : IEffect
         tween.TweenProperty(target, "modulate", endModulate, Duration);
         await tween.ToSignal(tween, Tween.SignalName.Finished);
     }
-
-    public double GetDuration() => Duration;
 
     public override string ToString() =>
         $"{(EndAlpha == 1.0 ? "DissolveEffect" : EndAlpha == 0.0 ? "FadeEffect" : "OpacityEffect")}";

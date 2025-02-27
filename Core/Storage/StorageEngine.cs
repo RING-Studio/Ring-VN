@@ -19,7 +19,7 @@ public class StorageEngine
     public bool Paused;
 
     /// <summary>
-    /// 连续执行模式，开启后无视<see cref="IScriptBlock.Continue"/>的值强制持续执行所有语句
+    /// 连续执行模式，开启后无视<see cref="ScriptBlock.Continue"/>的值强制持续执行所有语句
     /// </summary>
     public bool ForceContinue;
 
