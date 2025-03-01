@@ -23,12 +23,12 @@ public interface ITransition
 /// </summary>
 public abstract class BGTransition : ITransition
 {
-    public Texture2D NewBG;
+    public Sprite2D NewBG;
 
     /// <summary>
-    /// 设置要替换的新背景
+    /// 设置要替换的新背景（需要以Detached BG Node的形式提供）
     /// </summary>
-    public BGTransition SetNewBG(Texture2D newBG)
+    public BGTransition SetNewBG(Sprite2D newBG)
     {
         NewBG = newBG;
         return this;
@@ -57,7 +57,9 @@ public class DissolveTrans : BGTransition
         stage.Mask.Alpha().Set(0);
 
         await stage.Mask.Apply(OpacityEffect.Dissolve(duration / 2));
-        stage.Background.Texture = NewBG;
+        stage.Background.Drop();
+        stage.Background = NewBG;
+        Canvas.Attach(NewBG);
         await stage.Mask.Apply(OpacityEffect.Fade(duration / 2));
 
         stage.Mask.Drop();
@@ -124,7 +126,9 @@ public class ImageTrans : BGTransition
             Duration / 2
         ).Apply();
 
-        stage.Background.Texture = NewBG;
+        stage.Background.Drop();
+        stage.Background = NewBG;
+        Canvas.Attach(NewBG);
 
         // Mask Off
         await MethodInterpolation.New(

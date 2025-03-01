@@ -29,3 +29,9 @@ fade = Fade(0.8)
 # Transition
 dissolveTrans = DissolveTrans()
 slide = ImageTrans()
+
+# Image Load Hook
+def GetPlacementForImage(path: str, x: float, y: float):
+    if path.startswith("res://assets/images/bg"):
+        return Placement(0.0, 0.0, max(1920 / x, 1080 / y))
+    return Placement(0.0, 0.0, 1.0)

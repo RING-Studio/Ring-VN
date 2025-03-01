@@ -40,6 +40,10 @@ public class PathSTD : IEquatable<PathSTD>
         {
             return new PathSTD(path.TrimPrefix("./"));
         }
+        else if (path.StartsWith('/'))
+        {
+            return new PathSTD(path.TrimPrefix("/"));
+        }
         else
         {
             return new PathSTD(path);

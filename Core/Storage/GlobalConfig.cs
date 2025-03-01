@@ -33,4 +33,6 @@ public class GlobalConfig
     /// 角色名与立绘y基线对应关系
     /// </summary>
     public Dictionary<string, double> YBaseTable = [];
+
+    public Callable TextureLoadHook = Callable.From<string, Texture2D, Texture2D>((_, texture) => texture);
 }

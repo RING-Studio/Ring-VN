@@ -2,6 +2,7 @@ namespace RingEngine.Core.Script;
 
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using Godot;
@@ -177,7 +178,8 @@ public class Show : ScriptBlock
 
     public override async Task Execute(VNRuntime runtime)
     {
-        var texture = UniformLoader.Load<Texture2D>(runtime.Script.script.StandardizePath(ImgPath));
+        var path = runtime.Script.script.StandardizePath(ImgPath);
+        var texture = UniformLoader.Load<Texture2D>(path);
         var charas = runtime.Stage.Characters;
         var interpreter = runtime.Script.interpreter;
 
@@ -263,9 +265,11 @@ public class ChangeBG : ScriptBlock
     public override async Task Execute(VNRuntime runtime)
     {
         var stage = runtime.Stage;
-        var texture = UniformLoader.Load<Texture2D>(runtime.Script.StandardizePath(ImgPath));
+        var path = runtime.Script.script.StandardizePath(ImgPath);
+        var texture = UniformLoader.Load<Texture2D>(path);
+        var placment = runtime.Script.interpreter.Eval<Placement>($"GetPlacementForImage(\"{path.GodotPath}\",{texture.GetSize().X}, {texture.GetSize().Y})");
 
-        var newBG = Canvas.AddBG(texture, Placement.BG);
+        var newBG = Canvas.AddBG(texture, placment);
         if (Effect != null)
         {
             newBG.Alpha().Set(0);
@@ -301,7 +305,9 @@ public class ChangeScene : ScriptBlock
     public override async Task Execute(VNRuntime runtime)
     {
         var canvas = runtime.Stage;
-        var newBG = UniformLoader.Load<Texture2D>(runtime.Script.StandardizePath(BGPath));
+        var config = runtime.Storage.Config;
+        var texture = UniformLoader.Load<Texture2D>(runtime.Script.StandardizePath(BGPath));
+        var newBG = Canvas.AddBG(texture, Placement.BG, true);
         // 隐去UI
         var ui = runtime.UI.Theme.Root;
         await ui.Apply(OpacityEffect.Fade());

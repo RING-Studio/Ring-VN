@@ -32,27 +32,3 @@ func load_snapshot():
 	var title = $Title
 	remove_child(title)
 	title.queue_free()
-
-func load_tetromino():
-	var tetromino = minigame_scene.instantiate()
-	tetromino.name = "Tetromino"
-	tetromino.cleanup_hook = Callable(end_tetromino)
-	$Runtime.process_mode = Node.PROCESS_MODE_DISABLED
-	$Runtime.visible = false
-	add_child(tetromino)
-
-func end_tetromino():
-	$Tetromino.queue_free()
-	$Runtime.process_mode = Node.PROCESS_MODE_INHERIT
-	$Runtime.visible = true
-
-func init_minigame(name: String) -> void:
-	match name:
-		"Tetromino": load_tetromino()
-		_: print("Cannot find minigame " + name)
-
-func get_persist_data(name: String) -> Dictionary:
-	return {}
-
-func set_persist_data(name: String, data: Dictionary) -> void:
-	pass

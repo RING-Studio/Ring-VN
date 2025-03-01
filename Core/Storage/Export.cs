@@ -50,7 +50,7 @@ public class Snapshot
 
     public void Load(PathSTD folder)
     {
-        GodotSceneTree = UniformLoader.LoadScene(folder + "GodotSceneTree.tscn");
+        GodotSceneTree = UniformLoader.Load<PackedScene>(folder + "GodotSceneTree.tscn");
         ScriptPath = UniformLoader.LoadText(folder + "scriptPath.txt");
         Global = UniformLoader.LoadText(folder + "global.json");
     }

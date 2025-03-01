@@ -45,7 +45,7 @@ public class SceneTreeProxy
         {
             return;
         }
-        var runtimeRoot = UniformLoader.LoadScene(RuntimeScenePath).Instantiate();
+        var runtimeRoot = UniformLoader.Load<PackedScene>(RuntimeScenePath).Instantiate();
         runtimeRoot.Name = RuntimeRootName;
 
         Root.AddChild(runtimeRoot);

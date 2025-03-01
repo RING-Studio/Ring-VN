@@ -22,8 +22,6 @@ public static class UniformLoader
         }
     }
 
-    public static PackedScene LoadScene(PathSTD path) => Load<PackedScene>(path);
-
     public static void Save(Resource resource, PathSTD path)
     {
         var error = DirAccess.MakeDirRecursiveAbsolute(path.GodotDirectory);

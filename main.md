@@ -1,6 +1,6 @@
 # Chapter ???
 
-changeBG<img src="assets/bg1.png" alt="bg1" style="zoom:25%;" />with dissolve
+changeBG <img src="assets/images/bg/班主任办公室/BG13_d_a_19201440.webp" alt="BG13_d_a_19201440" style="zoom:10%;" />with dissolve
 
 ？？？："那么，世界回应了少女，实现了她的心愿？"
 
