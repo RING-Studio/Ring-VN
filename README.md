@@ -89,6 +89,7 @@ VNRuntime场景树对C#侧提供的静态界面，硬编码了场景结构，场
 ## TODO List
 
 - [x] 并行动画实现改进（用于Show）
+- [ ] 支持在Placment中处理复杂逻辑
 
 
 

@@ -3,6 +3,14 @@
 *.import
 **/*.import
 build/
+
+*.csproj.old*
+
+# Core的脚本不需要uid（除了RingIO）
+Core/*.cs.uid
+Core/**/*.cs.uid
+!Core/RingIO.cs.uid
+
 # 从python官网下载embedded package解压到这个目录即可，可以自动识别不同版本
 python/**
 !python/.gitkeep
