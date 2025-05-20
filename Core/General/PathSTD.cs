@@ -14,6 +14,8 @@ public class PathSTD : IEquatable<PathSTD>
 
     public string Directory => Path.GetDirectoryName(RelativePath);
 
+    public string ParentDirectory => GetParentDir();
+
     /// <summary>
     /// 没有办法识别文件和文件夹，用的时候自己确认路径是什么
     /// </summary>
@@ -22,6 +24,16 @@ public class PathSTD : IEquatable<PathSTD>
     public string Extension => Path.GetExtension(RelativePath);
     public string GodotPath => $"res://{RelativePath}";
     public string GodotDirectory => $"res://{Directory}";
+    public string GodotParentDirectory => $"res://{ParentDirectory}";
+
+    public string GetParentDir()
+    {
+        if (!Directory.Contains('/'))
+        {
+            return "";
+        }
+        return Directory.Split('/')[0..^1].Join("/");
+    }
 
     PathSTD(string path)
     {

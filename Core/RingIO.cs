@@ -25,8 +25,8 @@ public partial class RingIO : Node
 
     public Callable TextureLoadHook
     {
-        get => Runtime.Storage.Config.TextureLoadHook;
-        set => Runtime.Storage.Config.TextureLoadHook = value;
+        get => Runtime.Config.TextureLoadHook;
+        set => Runtime.Config.TextureLoadHook = value;
     }
 
     /// <summary>

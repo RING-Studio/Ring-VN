@@ -1,0 +1,13 @@
+{
+    "res://assets/bg1.png": {
+        "size": [1920, 1080]
+    },
+    "res://assets/红叶.png": {
+        "baseY": 200,
+        "size": [1000, 2000]
+    },
+    "bg1": {
+        "size": [1920, 1080],
+        "anchor": [0, 0]
+    }
+}

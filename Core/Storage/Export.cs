@@ -8,12 +8,10 @@ public class StorageModule
 {
     // 全局变量
     public StorageEngine Global { get; private set; }
-    public GlobalConfig Config { get; private set; }
 
     public StorageModule()
     {
         Global = new StorageEngine();
-        Config = new GlobalConfig();
     }
 
     public string Serialize()

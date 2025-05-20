@@ -24,6 +24,7 @@ public class VNRuntime
     public UIModule UI;
     public StageModule Stage;
     public StorageModule Storage;
+    public RingConfig Config;
     public AudioModule Audio;
     public Task CurrentTask = null;
 
@@ -33,6 +34,7 @@ public class VNRuntime
         UI = new UIModule() { runtime = this, Theme = new DefaultTheme() };
         Stage = new StageModule();
         Storage = new StorageModule();
+        Config = new RingConfig();
         Audio = new AudioModule();
     }
 

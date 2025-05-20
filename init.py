@@ -1,3 +1,4 @@
+from __future__ import annotations
 import clr
 clr.AddReference("RingEngine")
 
@@ -18,6 +19,13 @@ nearleft = Placement(0.0, 300.0, 1.0)
 nearmiddle = Placement(450.0, 300.0, 1.0)
 nearright = Placement(900.0, 300.0, 1.0)
 
+def Farleft(path: str, x: float, y: float) -> Placement:
+    p = Placement(0.0, 0.0, 1.0)
+    if "红叶" in path:
+        p.x = 500.0
+    return p
+
+
 # Effects
 transparent = SetAlpha.Transparent
 opaque = SetAlpha.Opaque
@@ -32,6 +40,7 @@ slide = ImageTrans()
 
 # Image Load Hook
 def GetPlacementForImage(path: str, x: float, y: float):
+    pos = Placement(0.0, 0.0, 1.0)
     if path.startswith("res://assets/images/bg"):
-        return Placement(0.0, 0.0, max(1920 / x, 1080 / y))
-    return Placement(0.0, 0.0, 1.0)
+        pos.scale = max(1920 / x, 1080 / y)
+    return pos

@@ -71,7 +71,12 @@ public static class Canvas
         return bg;
     }
 
-    public static Sprite2D AddCharacter(string name, Texture2D texture, Placement placement, bool detached = false)
+    public static Sprite2D AddCharacter(
+        string name,
+        Texture2D texture,
+        Placement placement,
+        bool detached = false
+    )
     {
         var character = new Sprite2D()
         {
@@ -93,7 +98,12 @@ public static class Canvas
         return character;
     }
 
-    public static Sprite2D AddMask(string name, Texture2D texture, Placement placement, bool detached = false)
+    public static Sprite2D AddMask(
+        string name,
+        Texture2D texture,
+        Placement placement,
+        bool detached = false
+    )
     {
         var mask = new Sprite2D()
         {

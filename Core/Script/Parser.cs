@@ -196,10 +196,9 @@ public static class BuiltInFunctionParser
         from imgOpen in Parse.String("<img src=\"")
         from path in Parse.CharExcept('"').Many().Text()
         from imgClose in Parse.AnyChar.Until(Parse.String("/>"))
-        from withEffect in
-            from _ in Parse.String("with").Token()
-            from effect in ImagePathParser.Or(InlineCodeBlockParser.XOr(IdentifierParser))
-            select effect
+        from withEffect in from _ in Parse.String("with").Token()
+        from effect in ImagePathParser.Or(InlineCodeBlockParser.XOr(IdentifierParser))
+        select effect
 
         select new ChangeScene(path, withEffect);
 

@@ -267,7 +267,9 @@ public class ChangeBG : ScriptBlock
         var stage = runtime.Stage;
         var path = runtime.Script.script.StandardizePath(ImgPath);
         var texture = UniformLoader.Load<Texture2D>(path);
-        var placment = runtime.Script.interpreter.Eval<Placement>($"GetPlacementForImage(\"{path.GodotPath}\",{texture.GetSize().X}, {texture.GetSize().Y})");
+        var placment = runtime.Script.interpreter.Eval<Placement>(
+            $"GetPlacementForImage(\"{path.GodotPath}\",{texture.GetSize().X}, {texture.GetSize().Y})"
+        );
 
         var newBG = Canvas.AddBG(texture, placment);
         if (Effect != null)
@@ -305,7 +307,6 @@ public class ChangeScene : ScriptBlock
     public override async Task Execute(VNRuntime runtime)
     {
         var canvas = runtime.Stage;
-        var config = runtime.Storage.Config;
         var texture = UniformLoader.Load<Texture2D>(runtime.Script.StandardizePath(BGPath));
         var newBG = Canvas.AddBG(texture, Placement.BG, true);
         // 隐去UI
@@ -403,12 +404,14 @@ public class Say : ScriptBlock
         var UI = runtime.UI;
         UI.DefaultTheme.TextBox.VisibleRatio = 0;
         UI.DefaultTheme.CharacterSay(Name, Content);
-        await MethodInterpolation.New<float>(
-            UI.DefaultTheme.TextBoxVisibleRatio,
-            0,
-            1,
-            Content.Length / runtime.Storage.Config.TextSpeed
-        ).Apply();
+        await MethodInterpolation
+            .New<float>(
+                UI.DefaultTheme.TextBoxVisibleRatio,
+                0,
+                1,
+                Content.Length / runtime.Config.TextSpeed
+            )
+            .Apply();
     }
 
     public override string ToString() => $"Say: name: {Name}, content: {Content}";
@@ -489,7 +492,6 @@ public class StopAudio : ScriptBlock
 
 public class SwitchFeature : ScriptBlock
 {
-
     bool Mode;
     string FeatureName;
 
@@ -500,6 +502,7 @@ public class SwitchFeature : ScriptBlock
     }
 
     public static SwitchFeature Enable(string featureName) => new(featureName, true);
+
     public static SwitchFeature Disable(string featureName) => new(featureName, false);
 
     public override Task Execute(VNRuntime runtime)
@@ -507,7 +510,8 @@ public class SwitchFeature : ScriptBlock
         var global = runtime.Storage.Global;
         switch (FeatureName.ToLowerInvariant())
         {
-            case "continue" or "forcecontinue":
+            case "continue"
+            or "forcecontinue":
                 global.ForceContinue = Mode;
                 break;
             default:

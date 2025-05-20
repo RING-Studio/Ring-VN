@@ -28,7 +28,7 @@ public class ScriptModule
         script = new RingScript(entryPointPath);
         interpreter = new PythonInterpreter(
             runtime,
-            GlobalConfig.ProjectRoot,
+            RingConfig.ProjectRoot,
             UniformLoader.LoadText(initCodePath)
         );
     }

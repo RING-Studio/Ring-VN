@@ -488,3 +488,6 @@ dotnet_diagnostic.SYSLIB0011.severity = suggestion
 
 # IDE0305: 简化集合初始化
 dotnet_diagnostic.IDE0305.severity = silent
+
+# CA1305: 指定 IFormatProvider
+dotnet_diagnostic.CA1305.severity = none

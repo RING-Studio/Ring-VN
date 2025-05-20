@@ -90,6 +90,17 @@ VNRuntime场景树对C#侧提供的静态界面，硬编码了场景结构，场
 
 - [x] 并行动画实现改进（用于Show）
 - [ ] 支持在Placment中处理复杂逻辑
+- [ ] Config
+    - [ ] 背景、CG
+        - size
+        - 定位点（左上角）
+    - 立绘
+        - size
+        - Y_base
+        - avatar size+anchor
+
+    - 同一个人的不同差分复用config（文件名前缀？）
+
 
 
 
