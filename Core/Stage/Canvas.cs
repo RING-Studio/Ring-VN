@@ -23,12 +23,9 @@ public static class Canvas
 
     static Dictionary<Sprite2D, ImageType> DetachedNodes = [];
 
-    public static IEnumerable<Sprite2D> Backgrounds =>
-        SceneTreeProxy.Backgrounds.GetChildren().Select(x => x as Sprite2D);
-    public static IEnumerable<Sprite2D> Characters =>
-        SceneTreeProxy.Characters.GetChildren().Select(x => x as Sprite2D);
-    public static IEnumerable<Sprite2D> Masks =>
-        SceneTreeProxy.Masks.GetChildren().Select(x => x as Sprite2D);
+    public static SubTree<Sprite2D> Backgrounds => SceneTreeProxy.Backgrounds;
+    public static SubTree<Sprite2D> Characters => SceneTreeProxy.Characters;
+    public static SubTree<Sprite2D> Masks => SceneTreeProxy.Masks;
 
     public static void Attach(Sprite2D node)
     {
@@ -36,13 +33,13 @@ public static class Canvas
         switch (DetachedNodes[node])
         {
             case ImageType.BG:
-                SceneTreeProxy.Backgrounds.AddChild(node);
+                Backgrounds.AddChild(node);
                 break;
             case ImageType.Character:
-                SceneTreeProxy.Characters.AddChild(node);
+                Characters.AddChild(node);
                 break;
             case ImageType.Mask:
-                SceneTreeProxy.Masks.AddChild(node);
+                Masks.AddChild(node);
                 break;
             default:
                 Unreachable();
@@ -62,7 +59,7 @@ public static class Canvas
         };
         if (!detached)
         {
-            SceneTreeProxy.Backgrounds.AddChild(bg);
+            Backgrounds.AddChild(bg);
         }
         else
         {
@@ -88,7 +85,7 @@ public static class Canvas
         };
         if (!detached)
         {
-            SceneTreeProxy.Characters.AddChild(character);
+            Characters.AddChild(character);
         }
         else
         {
@@ -115,7 +112,7 @@ public static class Canvas
         };
         if (!detached)
         {
-            SceneTreeProxy.Masks.AddChild(mask);
+            Masks.AddChild(mask);
         }
         else
         {

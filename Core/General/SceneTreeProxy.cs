@@ -1,8 +1,65 @@
 namespace RingEngine.Core.General;
 
+using System.Collections;
+using System.Collections.Generic;
+using System.Linq;
 using Godot;
 using RingEngine.Core.Audio;
 using static RingEngine.Core.General.AssertWrapper;
+
+/// <summary>
+/// 代理类，用于访问一个Node下的Child Nodes。
+/// </summary>
+public partial class SubTree : Node, IEnumerable<Node>
+{
+    public Node this[int index] => GetChild(index);
+    public Node this[string name]
+    {
+        get
+        {
+            Assert(HasNode(name), $"{Name} does not have child: {name}");
+            return GetNode(name);
+        }
+        set
+        {
+            if (HasNode(name))
+            {
+                var old = GetNode(name);
+                old.QueueFree();
+            }
+            AddChild(value);
+            value.Name = name;
+        }
+    }
+
+    public IEnumerator<Node> GetEnumerator() => GetChildren().GetEnumerator();
+
+    IEnumerator IEnumerable.GetEnumerator() => this.GetEnumerator();
+}
+
+/// <summary>
+/// 代理类，用于访问一个Node下的Child Nodes，所有Child Node均为类型<typeparamref name="T"/>。
+/// </summary>
+/// <typeparam name="T">子节点类型</typeparam>
+public partial class SubTree<T> : SubTree, IEnumerable<T>
+    where T : Node
+{
+    public new T this[int index] => base[index] as T;
+    public new T this[string name]
+    {
+        get => base[name] as T;
+        set
+        {
+            Assert(value is T, $"Value is not of type {typeof(T).Name}");
+            base[name] = value;
+        }
+    }
+
+    public new IEnumerator<T> GetEnumerator() =>
+        GetChildren().Select(node => node as T).GetEnumerator();
+
+    IEnumerator IEnumerable.GetEnumerator() => this.GetEnumerator();
+}
 
 /// <summary>
 /// SceneTree代理类，场景树结构管理。初始化的时候需要实例化一次这个类来创建场景树结构。
@@ -17,13 +74,15 @@ public class SceneTreeProxy
     const string RuntimeRootName = "VNRuntime";
     const string RuntimeScenePath = "res://scenes/VNRuntime.tscn";
 
-    public static Node RuntimeRoot => Root.GetNode<Node>(RuntimeRootName);
+    static Node RuntimeRoot => Root.GetNode<Node>(RuntimeRootName);
 
     // Stage Part
-    public static Node2D StageRoot => RuntimeRoot.GetNode<Node2D>("Stage");
-    public static Node2D Backgrounds => StageRoot.GetNode<Node2D>("Backgrounds");
-    public static Node2D Characters => StageRoot.GetNode<Node2D>("Characters");
-    public static Node2D Masks => StageRoot.GetNode<Node2D>("Masks");
+    static Node2D StageRoot => RuntimeRoot.GetNode<Node2D>("Stage");
+    public static SubTree<Sprite2D> Backgrounds =>
+        (SubTree<Sprite2D>)StageRoot.GetNode("Backgrounds");
+    public static SubTree<Sprite2D> Characters =>
+        (SubTree<Sprite2D>)StageRoot.GetNode("Characters");
+    public static SubTree<Sprite2D> Masks => (SubTree<Sprite2D>)StageRoot.GetNode("Masks");
 
     // UI Part
     public static Control UIRoot => RuntimeRoot.GetNode<Control>("UI");

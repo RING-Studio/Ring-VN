@@ -31,8 +31,8 @@ public class StageModule
         {
             Characters.Add(character.Name, character);
         }
-        Background = Canvas.Backgrounds.ToArray()[0];
-        Mask = Canvas.Masks.ToArray()[0];
+        Background = Canvas.Backgrounds[0];
+        Mask = Canvas.Masks[0];
     }
 }
 
