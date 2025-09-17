@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Godot;
 using RingEngine.Core.General;
+using Logger = General.Logger;
 
 /// <summary>
 /// 集中管理所有节点的Tween以便于快进操作

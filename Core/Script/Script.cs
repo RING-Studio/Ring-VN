@@ -2,7 +2,6 @@ namespace RingEngine.Core.Script;
 
 using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using Godot;
@@ -11,6 +10,7 @@ using RingEngine.Core.Animation;
 using RingEngine.Core.General;
 using RingEngine.Core.Stage;
 using static RingEngine.Core.General.AssertWrapper;
+using Logger = General.Logger;
 
 #nullable enable
 

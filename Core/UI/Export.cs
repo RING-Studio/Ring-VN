@@ -7,6 +7,7 @@ using Godot.Collections;
 using RingEngine.Core.General;
 using RingEngine.Core.Script;
 using static RingEngine.Core.General.AssertWrapper;
+using Logger = General.Logger;
 
 public class UIModule
 {

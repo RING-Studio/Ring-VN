@@ -15,14 +15,14 @@ func game_start():
 	var tween := create_tween()
 	tween.tween_property($Black, "modulate:a", 1.0, 1.0)
 	tween.tween_interval(0.5)
-	tween.tween_callback(func():
+	#tween.tween_callback(func():
 		#RingIO.StartVNRuntime()
-
-		)
+#
+		#)
 	tween.tween_property($Black, "modulate:a", 0.0, 1.0)
-	tween.tween_callback(func():
+	#tween.tween_callback(func():
 		#$Runtime.process_mode = Node.PROCESS_MODE_INHERIT
-		)
+		#)
 
 func load_snapshot():
 	var runtime: Node2D = load("res://Runtime/Runtime.cs").new()
