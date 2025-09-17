@@ -33,13 +33,13 @@ public static class Canvas
         switch (DetachedNodes[node])
         {
             case ImageType.BG:
-                Backgrounds.AddChild(node);
+                Backgrounds[node.Name] = node;
                 break;
             case ImageType.Character:
-                Characters.AddChild(node);
+                Characters[node.Name] = node;
                 break;
             case ImageType.Mask:
-                Masks.AddChild(node);
+                Masks[node.Name] = node;
                 break;
             default:
                 Unreachable();
@@ -59,7 +59,7 @@ public static class Canvas
         };
         if (!detached)
         {
-            Backgrounds.AddChild(bg);
+            Backgrounds[bg.Name] = bg;
         }
         else
         {
@@ -85,7 +85,7 @@ public static class Canvas
         };
         if (!detached)
         {
-            Characters.AddChild(character);
+            Characters[character.Name] = character;
         }
         else
         {
@@ -112,7 +112,7 @@ public static class Canvas
         };
         if (!detached)
         {
-            Masks.AddChild(mask);
+            Masks[mask.Name] = mask;
         }
         else
         {

@@ -10,29 +10,37 @@ using static RingEngine.Core.General.AssertWrapper;
 /// <summary>
 /// 代理类，用于访问一个Node下的Child Nodes。
 /// </summary>
-public partial class SubTree : Node, IEnumerable<Node>
+public partial class SubTree : IEnumerable<Node>
 {
-    public Node this[int index] => GetChild(index);
+    protected Node Root;
+
+    public SubTree(Node root)
+    {
+        Assert(root != null, "SubTree Root cannot be null.");
+        Root = root;
+    }
+
+    public Node this[int index] => Root.GetChild(index);
     public Node this[string name]
     {
         get
         {
-            Assert(HasNode(name), $"{Name} does not have child: {name}");
-            return GetNode(name);
+            Assert(Root.HasNode(name), $"{Root.Name} does not have child: {name}");
+            return Root.GetNode(name);
         }
         set
         {
-            if (HasNode(name))
+            if (Root.HasNode(name))
             {
-                var old = GetNode(name);
+                var old = Root.GetNode(name);
                 old.QueueFree();
             }
-            AddChild(value);
+            Root.AddChild(value);
             value.Name = name;
         }
     }
 
-    public IEnumerator<Node> GetEnumerator() => GetChildren().GetEnumerator();
+    public IEnumerator<Node> GetEnumerator() => Root.GetChildren().GetEnumerator();
 
     IEnumerator IEnumerable.GetEnumerator() => this.GetEnumerator();
 }
@@ -44,6 +52,9 @@ public partial class SubTree : Node, IEnumerable<Node>
 public partial class SubTree<T> : SubTree, IEnumerable<T>
     where T : Node
 {
+    public SubTree(Node root)
+        : base(root) { }
+
     public new T this[int index] => base[index] as T;
     public new T this[string name]
     {
@@ -56,7 +67,7 @@ public partial class SubTree<T> : SubTree, IEnumerable<T>
     }
 
     public new IEnumerator<T> GetEnumerator() =>
-        GetChildren().Select(node => node as T).GetEnumerator();
+        Root.GetChildren().Select(node => node as T).GetEnumerator();
 
     IEnumerator IEnumerable.GetEnumerator() => this.GetEnumerator();
 }
@@ -78,11 +89,9 @@ public class SceneTreeProxy
 
     // Stage Part
     static Node2D StageRoot => RuntimeRoot.GetNode<Node2D>("Stage");
-    public static SubTree<Sprite2D> Backgrounds =>
-        (SubTree<Sprite2D>)StageRoot.GetNode("Backgrounds");
-    public static SubTree<Sprite2D> Characters =>
-        (SubTree<Sprite2D>)StageRoot.GetNode("Characters");
-    public static SubTree<Sprite2D> Masks => (SubTree<Sprite2D>)StageRoot.GetNode("Masks");
+    public static SubTree<Sprite2D> Backgrounds => new(StageRoot.GetNode("Backgrounds"));
+    public static SubTree<Sprite2D> Characters => new(StageRoot.GetNode("Characters"));
+    public static SubTree<Sprite2D> Masks => new(StageRoot.GetNode("Masks"));
 
     // UI Part
     public static Control UIRoot => RuntimeRoot.GetNode<Control>("UI");

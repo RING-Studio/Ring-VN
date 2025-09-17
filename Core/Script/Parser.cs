@@ -32,6 +32,39 @@ internal class DummyBlock : ScriptBlock, IEquatable<DummyBlock>
     public override int GetHashCode() => HashCode.Combine(0);
 }
 
+static class Utils
+{
+    // 允许中文/英文括号，花括号，中括号
+    public static readonly Parser<char> OpenParen = Parse.Chars('(', '（', '{', '[');
+    public static readonly Parser<char> CloseParen = Parse.Chars(')', '）', '}', ']');
+
+    // 允许中文/英文冒号
+    public static readonly Parser<char> Colon = Parse.Chars(':', '：');
+
+    // 允许中文/英文逗号
+    public static readonly Parser<char> Comma = Parse.Chars(',', '，');
+
+    // key 或 value：非括号、非逗号字符，允许空格
+    public static readonly Parser<string> KeyOrValue = Parse
+        .CharExcept([':', '：', ',', '，', '(', ')', '（', '）', '{', '}', '[', ']'])
+        .Many()
+        .Text()
+        .Token();
+
+    public static readonly Parser<KeyValuePair<string, string>> KeyValuePairParser =
+        from key in KeyOrValue
+        from _ in Colon.Token()
+        from value in KeyOrValue
+        select new KeyValuePair<string, string>(key, value);
+
+    // 动画语句的额外参数包，形如 (key1: value1, key2: value2)
+    public static readonly Parser<Dictionary<string, string>> ParametersParser =
+        from _open in OpenParen.Token()
+        from kvs in KeyValuePairParser.DelimitedBy(Comma.Token())
+        from _close in CloseParen.Token()
+        select kvs.ToDictionary(kv => kv.Key, kv => kv.Value);
+}
+
 public static class Parser
 {
     public static readonly Parser<CodeBlock> CodeBlockParser =
@@ -199,8 +232,8 @@ public static class BuiltInFunctionParser
         from withEffect in from _ in Parse.String("with").Token()
         from effect in ImagePathParser.Or(InlineCodeBlockParser.XOr(IdentifierParser))
         select effect
-
-        select new ChangeScene(path, withEffect);
+        from parameters in Utils.ParametersParser.Optional()
+        select new ChangeScene(path, withEffect, parameters.IsDefined ? parameters.Get() : []);
 
     public static readonly Parser<JumpToLabel> JumpToLabelParser =
         from _ in Parse.String("goto").Token()

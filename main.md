@@ -48,7 +48,7 @@ show<img src="assets/立绘1-叹气.png" alt="立绘1-叹气" style="zoom:10%;" 
 
 hide royu with fade
 
-changeScene <img src="assets/bg2.jpg" alt="bg2" style="zoom:15%;" /> with <img src="assets/rule_10.png" alt="rule_10" style="zoom:25%;" />
+changeScene <img src="assets/bg2.jpg" alt="bg2" style="zoom:15%;" /> with <img src="assets/rule_10.png" alt="rule_10" style="zoom:25%;" /> (duration: 1, reversed: true)
 
 ## Chapter 1
 

@@ -251,17 +251,61 @@ public class TestBuiltInParser
         Assert.AreEqual("Dissolve(2.0, 0.5)", ret.Effect);
     }
 
-    [TestMethod]
-    [DataRow(
-        @"changeScene <img src=""assets/bg2.jpg"" alt=""bg2"" style=""zoom:15%;"" />with ImageTrans(""./assets/Runtime/wink.png"")",
-        "assets/bg2.jpg",
-        "ImageTrans(\"./assets/Runtime/wink.png\")"
-    )]
-    public void ParseChangeScene(string input, string bgPath, string? effect)
+    static IEnumerable<object[]> ChangeSceneCases()
+    {
+        yield return new object[]
+        {
+            @"changeScene <img src=""assets/bg2.jpg"" alt=""bg2"" style=""zoom:15%;"" />with ImageTrans(""./assets/Runtime/wink.png"")",
+            "assets/bg2.jpg",
+            "ImageTrans(\"./assets/Runtime/wink.png\")",
+            new Dictionary<string, string>(),
+        };
+
+        yield return new object[]
+        {
+            @"changeScene <img src=""assets/bg2.jpg"" alt=""bg2"" style=""zoom:15%;"" />with ImageTrans(""./assets/Runtime/wink.png"") (duration:1, reversed: True，smooth: 0.2）",
+            "assets/bg2.jpg",
+            "ImageTrans(\"./assets/Runtime/wink.png\")",
+            new Dictionary<string, string>
+            {
+                { "duration", "1" },
+                { "reversed", "True" },
+                { "smooth", "0.2" },
+            },
+        };
+
+        yield return new object[]
+        {
+            @"changeScene <img src=""assets/bg2.jpg"" alt=""bg2"" style=""zoom:15%;"" />with <img src=""assets/rule_10.png"" alt=""rule_10"" style=""zoom:25%;"" /> (duration:1, reversed: True，smooth: 0.2）",
+            "assets/bg2.jpg",
+            "assets/rule_10.png",
+            new Dictionary<string, string>
+            {
+                { "duration", "1" },
+                { "reversed", "True" },
+                { "smooth", "0.2" },
+            },
+        };
+    }
+
+    [DataTestMethod]
+    [DynamicData(nameof(ChangeSceneCases), DynamicDataSourceType.Method)]
+    public void ParseChangeScene(
+        string input,
+        string bgPath,
+        string effect,
+        Dictionary<string, string> extraParams
+    )
     {
         var ret = BuiltInFunctionParser.ChangeSceneParser.End().Parse(input);
         Assert.AreEqual(bgPath, ret.BGPath);
         Assert.AreEqual(effect, ret.Transition);
+        Assert.AreEqual(extraParams.Count, ret.ExtraParams.Count);
+        foreach (var (key, value) in extraParams)
+        {
+            Assert.IsTrue(ret.ExtraParams.ContainsKey(key));
+            Assert.AreEqual(value, ret.ExtraParams[key]);
+        }
     }
 
     [TestMethod]

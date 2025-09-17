@@ -1,10 +1,13 @@
 namespace RingEngine.Core.Animation;
 
+using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using Godot;
 using RingEngine.Core;
 using RingEngine.Core.General;
 using RingEngine.Core.Stage;
+using static RingEngine.Core.General.AssertWrapper;
 
 /// <summary>
 /// 需要全局信息的效果
@@ -34,6 +37,8 @@ public abstract class BGTransition : ITransition
         return this;
     }
 
+    public abstract BGTransition SetExtraParams(Dictionary<string, string> extraParams);
+
     public abstract Task Run(VNRuntime runtime);
 }
 
@@ -46,6 +51,19 @@ public class DissolveTrans : BGTransition
     {
         this.mask = UniformLoader.Load<Texture2D>("res://assets/Runtime/black.png");
         this.duration = duration;
+    }
+
+    public override BGTransition SetExtraParams(Dictionary<string, string> extraParams)
+    {
+        if (extraParams.TryGetValue("mask", out var value))
+        {
+            mask = UniformLoader.Load<Texture2D>(value);
+        }
+        if (extraParams.TryGetValue("duration", out var value2))
+        {
+            duration = Convert.ToDouble(value2);
+        }
+        return this;
     }
 
     public override async Task Run(VNRuntime runtime)
@@ -96,6 +114,28 @@ public class ImageTrans : BGTransition
         Duration = duration;
         Reversed = reversed;
         Smooth = smooth;
+    }
+
+    public override BGTransition SetExtraParams(Dictionary<string, string> extraParams)
+    {
+        if (extraParams.TryGetValue("mask", out var value))
+        {
+            Mask = UniformLoader.Load<Texture2D>(value);
+        }
+        if (extraParams.TryGetValue("duration", out var value2))
+        {
+            Duration = Convert.ToDouble(value2);
+        }
+        if (extraParams.TryGetValue("reversed", out var value3))
+        {
+            // 这个转换是Case Insensitive的
+            Reversed = Convert.ToBoolean(value3);
+        }
+        if (extraParams.TryGetValue("smooth", out var value4))
+        {
+            Smooth = Convert.ToDouble(value4);
+        }
+        return this;
     }
 
     public override async Task Run(VNRuntime runtime)

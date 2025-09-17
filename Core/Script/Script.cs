@@ -296,12 +296,14 @@ public class ChangeScene : ScriptBlock
 {
     public PathSTD BGPath;
     public string Transition;
+    public Dictionary<string, string> ExtraParams;
 
-    public ChangeScene(PathSTD path, string effect)
+    public ChangeScene(PathSTD path, string effect, Dictionary<string, string> extraParams)
     {
         Continue = true;
         BGPath = path;
         Transition = effect;
+        ExtraParams = extraParams;
     }
 
     public override async Task Execute(VNRuntime runtime)
@@ -333,7 +335,7 @@ public class ChangeScene : ScriptBlock
         {
             instance = runtime.Script.interpreter.Eval(Transition);
         }
-        await instance.SetNewBG(newBG).Run(runtime);
+        await instance.SetNewBG(newBG).SetExtraParams(ExtraParams).Run(runtime);
         // 重新显示立绘（如果有）
         List<Task> dissolve_tweens = [];
         foreach (var character in canvas.Characters)
