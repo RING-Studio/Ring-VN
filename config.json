@@ -1,13 +1,124 @@
 {
-    "res://assets/bg1.png": {
-        "size": [1920, 1080]
+    "stage": {
+        "points": {
+            "NearLeft": {
+                "x": 0.15,
+                "y": 0.0
+            },
+            "NearCenter": {
+                "x": 0.50,
+                "y": 0.0
+            },
+            "NearRight": {
+                "x": 0.85,
+                "y": 0.0
+            },
+            "MidLeft": {
+                "x": 0.20,
+                "y": 0.0
+            },
+            "MidCenter": {
+                "x": 0.50,
+                "y": 0.0
+            },
+            "MidRight": {
+                "x": 0.80,
+                "y": 0.0
+            },
+            "FarLeft": {
+                "x": 0.25,
+                "y": 0.0
+            },
+            "FarCenter": {
+                "x": 0.50,
+                "y": 0.0
+            },
+            "FarRight": {
+                "x": 0.75,
+                "y": 0.0
+            }
+        },
+        "depth_scales": {
+            "Near": 1.15,
+            "Mid": 1.0,
+            "Far": 0.85
+        }
     },
-    "res://assets/红叶.png": {
-        "baseY": 200,
-        "size": [1000, 2000]
+    "backgrounds": {
+        "defaults": {
+            "fit_mode": "cover",
+            "anchor": {
+                "x": 0.0,
+                "y": 0.0
+            }
+        },
+        "items": [
+            {
+                "id": "school_gate_day",
+                "file": "bg/school_gate_day.png"
+            },
+            {
+                "id": "room_night",
+                "file": "bg/room_night.png",
+                "fit_mode": "none",
+                "anchor": {
+                    "x": 0.5,
+                    "y": 0.0
+                },
+                "scale": 1.1
+            }
+        ]
     },
-    "bg1": {
-        "size": [1920, 1080],
-        "anchor": [0, 0]
+    "characters": {
+        "defaults": {
+            "base_scale": 1.0,
+            "y_offset": 0.0
+        },
+        "items": [
+            {
+                "id": "alice",
+                "folder": "characters/alice",
+                "base_scale": 1.1,
+                "y_offset": 0.02,
+                "auto_variants": {
+                    "enabled": true,
+                    "pattern": "{variant}.png",
+                    "exclude": [
+                        "_thumb.png",
+                        "_ref.png"
+                    ]
+                },
+                "variants": {
+                    "angry": {
+                        "file": "angry_alt.png",
+                        "base_scale": 1.15,
+                        "y_offset": 0.05
+                    }
+                }
+            },
+            {
+                "id": "bob",
+                "folder": "characters/bob",
+                "auto_variants": {
+                    "enabled": true,
+                    "pattern": "{variant}.png",
+                    "exclude": []
+                }
+            }
+        ]
+    },
+    "overlays": {
+        "items": [
+            {
+                "id": "flash_white",
+                "file": "overlay/flash_white.png",
+                "blend_mode": "add"
+            },
+            {
+                "id": "dark_vignette",
+                "file": "overlay/dark_vignette.png",
+                "blend_mode": "multiply"
+            }
+        ]
     }
 }
